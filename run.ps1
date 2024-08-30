@@ -5,7 +5,7 @@ Add-Type -AssemblyName System.Drawing
 # Create a new NotifyIcon
 $trayIcon = New-Object System.Windows.Forms.NotifyIcon
 # Use a default application icon
-$trayIcon.Icon = [System.Drawing.SystemIcons]::Application
+$trayIcon.Icon = './ICON_Disabled.ico'
 $trayIcon.Text = 'ProxySwitcher'
 $trayIcon.Visible = $true
 
@@ -23,6 +23,7 @@ $ctxProperties.Add_Click({
 $ctxEnable = New-Object System.Windows.Forms.ToolStripMenuItem
 $ctxEnable.Text = 'Enable Proxy'
 $ctxEnable.Add_Click({
+        $trayIcon.Icon = './ICON_Enabled.ico'
         Start-Process powershell.exe -ArgumentList '-Command', 'go run . set'
     })
 
@@ -30,6 +31,7 @@ $ctxEnable.Add_Click({
 $ctxDisable = New-Object System.Windows.Forms.ToolStripMenuItem
 $ctxDisable.Text = 'Disable Proxy'
 $ctxDisable.Add_Click({
+        $trayIcon.Icon = './ICON_Disabled.ico'
         Start-Process powershell.exe -ArgumentList '-Command', 'go run . unset'
     })
 
