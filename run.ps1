@@ -12,6 +12,27 @@ $trayIcon.Visible = $true
 # Create the context menu
 $contextMenu = New-Object System.Windows.Forms.ContextMenuStrip
 
+# Add "Open Internet Options" menu item
+$ctxProperties = New-Object System.Windows.Forms.ToolStripMenuItem
+$ctxProperties.Text = 'Properties'
+$ctxProperties.Add_Click({
+        Start-Process rundll32.exe -ArgumentList 'shell32.dll,Control_RunDLL', 'inetcpl.cpl,,4'
+    })
+
+# Add "Enable Proxy Setting" menu item
+$ctxEnable = New-Object System.Windows.Forms.ToolStripMenuItem
+$ctxEnable.Text = 'Enable Proxy'
+$ctxEnable.Add_Click({
+        Start-Process powershell.exe -ArgumentList '-Command', 'go run . set'
+    })
+
+# Add "Disable Proxy Setting" menu item
+$ctxDisable = New-Object System.Windows.Forms.ToolStripMenuItem
+$ctxDisable.Text = 'Disable Proxy'
+$ctxDisable.Add_Click({
+        Start-Process powershell.exe -ArgumentList '-Command', 'go run . unset'
+    })
+
 # Add "Exit" menu item
 $ctxExit = New-Object System.Windows.Forms.ToolStripMenuItem
 $ctxExit.Text = 'Exit'
@@ -21,6 +42,9 @@ $ctxExit.Add_Click({
     })
 
 # Add menu items to the context menu
+$contextMenu.Items.Add($ctxProperties)
+$contextMenu.Items.Add($ctxEnable)
+$contextMenu.Items.Add($ctxDisable)
 $contextMenu.Items.Add($ctxExit)
 
 # Assign the context menu to the tray icon
