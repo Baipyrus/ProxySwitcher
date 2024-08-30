@@ -35,6 +35,13 @@ $ctxDisable.Add_Click({
         Start-Process powershell.exe -ArgumentList '-Command', 'go run . unset'
     })
 
+# Add "Save Proxy Setting" menu item
+$ctxSave = New-Object System.Windows.Forms.ToolStripMenuItem
+$ctxSave.Text = 'Save New Proxy'
+$ctxSave.Add_Click({
+        Start-Process powershell.exe -ArgumentList '-Command', 'go run . save'
+    })
+
 # Add "Exit" menu item
 $ctxExit = New-Object System.Windows.Forms.ToolStripMenuItem
 $ctxExit.Text = 'Exit'
@@ -47,6 +54,7 @@ $ctxExit.Add_Click({
 $contextMenu.Items.Add($ctxProperties)
 $contextMenu.Items.Add($ctxEnable)
 $contextMenu.Items.Add($ctxDisable)
+$contextMenu.Items.Add($ctxSave)
 $contextMenu.Items.Add($ctxExit)
 
 # Assign the context menu to the tray icon
