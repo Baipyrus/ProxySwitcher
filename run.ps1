@@ -37,7 +37,7 @@ $ctxDisable.Add_Click({
 
 # Add "Save Proxy Setting" menu item
 $ctxSave = New-Object System.Windows.Forms.ToolStripMenuItem
-$ctxSave.Text = 'Save New Proxy'
+$ctxSave.Text = 'Save New Config'
 $ctxSave.Add_Click({
         Start-Process powershell.exe -ArgumentList '-Command', 'go run . save'
     })

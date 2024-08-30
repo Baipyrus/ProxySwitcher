@@ -12,9 +12,9 @@ import (
 // saveCmd represents the save command
 var saveCmd = &cobra.Command{
 	Use:   "save",
-	Short: "Save some new internet proxy settings",
+	Short: "Save a new internet proxy config",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Saving New Proxy Settings...\n")
+		fmt.Printf("Saving New Proxy Config...\n")
 
 		// Block process until interrupted
 		done := make(chan os.Signal, 1)
