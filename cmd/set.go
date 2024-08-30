@@ -1,11 +1,13 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/Baipyrus/ProxySwitcher/util"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +16,9 @@ var setCmd = &cobra.Command{
 	Use:   "set",
 	Short: "Enable the current internet proxy settings",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Setting Proxy Settings...\n")
+		config, _ := util.ReadConfigs()
+		data, _ := json.Marshal(config)
+		fmt.Printf("%s\n\n", string(data))
 
 		// Block process until interrupted
 		done := make(chan os.Signal, 1)
