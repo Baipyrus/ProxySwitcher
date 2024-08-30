@@ -1,0 +1,102 @@
+[
+    {
+        "name": "env",
+        "cmd": "[System.Environment]::SetEnvironmentVariable($ARG, $ARG, 'User')",
+        "set": [
+            {
+                "args": [
+                    "http_proxy"
+                ],
+                "type": "variable"
+            }, {
+                "args": [
+                    "https_proxy"
+                ],
+                "type": "variable"
+            }
+        ],
+        "unset": [
+            {
+                "args": [
+                    "http_proxy",
+                    "[NullString]::Value"
+                ],
+                "type": "variable"
+            }, {
+                "args": [
+                    "https_proxy",
+                    "[NullString]::Value"
+                ],
+                "type": "variable"
+            }
+        ]
+    }, {
+        "name": "git",
+        "set": [
+            {
+                "args": [
+                    "config",
+                    "--global",
+                    "http.proxy"
+                ]
+            }, {
+                "args": [
+                    "config",
+                    "--global",
+                    "https.proxy"
+                ]
+            }
+        ],
+        "unset": [
+            {
+                "args": [
+                    "config",
+                    "--global",
+                    "--unset",
+                    "http.proxy"
+                ]
+            }, {
+                "args": [
+                    "config",
+                    "--global",
+                    "--unset",
+                    "https.proxy"
+                ]
+            }
+        ]
+    }, {
+        "name": "npm",
+        "set": [
+            {
+                "args": [
+                    "config",
+                    "set",
+                    "proxy"
+                ],
+                "equator": "="
+            }, {
+                "args": [
+                    "config",
+                    "set",
+                    "https-proxy"
+                ],
+                "equator": "="
+            }
+        ],
+        "unset": [
+            {
+                "args": [
+                    "config",
+                    "delete",
+                    "proxy"
+                ]
+            }, {
+                "args": [
+                    "config",
+                    "delete",
+                    "https-proxy"
+                ]
+            }
+        ]
+    }
+]
