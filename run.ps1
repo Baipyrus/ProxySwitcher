@@ -31,7 +31,7 @@ $ctxEnable = New-Object System.Windows.Forms.ToolStripMenuItem
 $ctxEnable.Text = 'Enable Proxy'
 $ctxEnable.Add_Click({
         $trayIcon.Icon = './assets/ICON_Enabled.ico'
-        Start-Process powershell.exe -ArgumentList '-Command', 'go run . set'
+        Start-Process powershell.exe -WindowStyle Hidden -ArgumentList '-Command', 'go run . set'
     })
 
 # Add "Disable Proxy Setting" menu item
@@ -39,7 +39,7 @@ $ctxDisable = New-Object System.Windows.Forms.ToolStripMenuItem
 $ctxDisable.Text = 'Disable Proxy'
 $ctxDisable.Add_Click({
         $trayIcon.Icon = './assets/ICON_Disabled.ico'
-        Start-Process powershell.exe -ArgumentList '-Command', 'go run . unset'
+        Start-Process powershell.exe -WindowStyle Hidden -ArgumentList '-Command', 'go run . unset'
     })
 
 # Add "Save Proxy Setting" menu item
