@@ -2,9 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-	"os/signal"
-	"syscall"
 
 	"github.com/spf13/cobra"
 )
@@ -14,13 +11,13 @@ var saveCmd = &cobra.Command{
 	Use:   "save",
 	Short: "Save a new internet proxy config",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Saving New Proxy Config...\n")
+		var name string
+		fmt.Print("Name: ")
+		fmt.Scanln(&name)
 
-		// Block process until interrupted
-		done := make(chan os.Signal, 1)
-		signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)
-		fmt.Println("Blocking, press ctrl+c to continue...")
-		<-done
+		var command string
+		fmt.Print("Command? ")
+		fmt.Scanln(&command)
 	},
 }
 
