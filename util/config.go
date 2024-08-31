@@ -24,3 +24,16 @@ func ReadConfigs() ([]*Config, error) {
 	}
 	return config, nil
 }
+
+func SaveConfig(config Config) error {
+	configs, _ := ReadConfigs()
+	configs = append(configs, &config)
+
+	data, err := json.Marshal(configs)
+	if err != nil {
+		return err
+	}
+
+	err = os.WriteFile("configs.json", data, 0666)
+	return err
+}

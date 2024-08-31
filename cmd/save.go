@@ -1,8 +1,11 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"strings"
 
+	"github.com/Baipyrus/ProxySwitcher/util"
 	"github.com/spf13/cobra"
 )
 
@@ -18,6 +21,19 @@ var saveCmd = &cobra.Command{
 		var command string
 		fmt.Print("Command? ")
 		fmt.Scanln(&command)
+
+		config := util.Config{Name: name, Cmd: command, Set: set, Unset: unset}
+
+		fmt.Println("\n\nPlease confirm the following data:")
+
+		data, _ := json.Marshal(config)
+		fmt.Printf("%s\n", string(data))
+
+		var input string
+		fmt.Print("Save this data? (Y/n) ")
+		if input == "" || strings.ToLower(input) == "y" {
+			util.SaveConfig(config)
+		}
 	},
 }
 
