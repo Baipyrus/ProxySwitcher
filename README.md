@@ -23,13 +23,6 @@ save configurations, or exit the application.
     git clone https://github.com/Baipyrus/ProxySwitcher.git
     ```
 
-2. Build the project:
-
-    ```powersell
-    cd ProxySwitcher
-    go build
-    ```
-
 ## Usage
 
 ### CLI Commands
@@ -37,19 +30,19 @@ save configurations, or exit the application.
 - **set**: Enable all saved proxies including system proxy.
 
     ```powersell
-    .\ProxySwitcher.exe set
+    go run . set
     ```
 
 - **unset**: Disable all saved proxies including system proxy.
 
     ```powersell
-    .\ProxySwitcher.exe unset
+    go run . unset
     ```
 
 - **save**: Saves a new configuration to set a proxy for.
 
-    ```POWERSELL
-    .\ProxySwitcher.exe save
+    ```powersell
+    go run . save
     ```
 
 ### Configuration
@@ -58,7 +51,7 @@ The programs for which the proxy settings should be managed are stored in a `con
 file, which can be modified directly or through the `save` command. For examples,
 please take a look at the [default config](./configs.json) or at the following block:
 
-```JSON
+```js
 [
     {
         "name": "test1", // Default CMD Name
