@@ -1,7 +1,7 @@
 [
     {
         "name": "env",
-        "cmd": "[System.Environment]::SetEnvironmentVariable($ARG, $ARG, 'User')",
+        "cmd": "[System.Environment]::SetEnvironmentVariable('$PRSW_ARG', $PRSW_ARG, 'User')",
         "set": [
             {
                 "args": [
