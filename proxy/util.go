@@ -100,9 +100,5 @@ func SetSystemProxy(state bool) error {
 	}
 
 	err = key.SetDWordValue("proxyEnable", value)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }

@@ -32,11 +32,7 @@ func ReadyCmd() (*io.WriteCloser, func() error, error) {
 
 		// Wait for command to flush
 		err := cmd.Wait()
-		if err != nil {
-			return err
-		}
-
-		return nil
+		return err
 	}, nil
 }
 
