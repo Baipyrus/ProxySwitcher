@@ -1,15 +1,13 @@
 package proxy
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/Baipyrus/ProxySwitcher/util"
 )
 
 func Unset() {
 	stdin, closeFunc, _ := util.ReadyCmd()
 
+	// Unset system proxy, if not already
 	proxy, _ := ReadSystemProxy()
 	if proxy.Enabled {
 		SetSystemProxy(false)
@@ -18,19 +16,13 @@ func Unset() {
 	configs, _ := util.ReadConfigs()
 	for _, config := range configs {
 		configCmd := config.Name
+		// Use command instead of name, if given
 		if config.Cmd != "" {
 			configCmd = config.Cmd
 		}
 
-		commands := getVariants(config.Unset, configCmd, "")
-
-		for _, command := range commands {
-			cmdArgs := strings.Join(command.Arguments, " ")
-			cmdStr := fmt.Sprintf("%s %s", command.Name, cmdArgs)
-
-			fmt.Printf("%s\n", cmdStr)
-			fmt.Fprintln(*stdin, cmdStr)
-		}
+		commands := generateCommands(config.Unset, configCmd, "")
+		util.ExecCmds(commands, stdin)
 	}
 
 	closeFunc()

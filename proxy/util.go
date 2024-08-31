@@ -12,11 +12,13 @@ func readArgs(replaceVariable bool, args []string, configCmd string) ([]string, 
 	var configArgs []string
 
 	for _, arg := range args {
+		// If not replacable, append
 		if !replaceVariable {
 			configArgs = append(configArgs, arg)
 			continue
 		}
 
+		// Replace specific "ProxySwitcher Argument" in command
 		configCmd = strings.Replace(configCmd, "$PRSW_ARG", arg, 1)
 	}
 
@@ -24,33 +26,37 @@ func readArgs(replaceVariable bool, args []string, configCmd string) ([]string, 
 }
 
 func applyProxy(configArgs []string, configCmd string, proxyServer string, variant *util.Variant) ([]string, string) {
+	// Skip, no proxy provided
 	if proxyServer == "" {
 		return configArgs, configCmd
 	}
 
+	// Insert proxy only on last VARIABLE type
 	if variant.Type == util.VARIABLE && strings.Count(configCmd, "$PRSW_ARG") == 1 {
 		configCmd = strings.Replace(configCmd, "$PRSW_ARG", proxyServer, 1)
 		return configArgs, configCmd
 	}
 
+	// Insert proxy right after equator
 	if variant.Equator != "" {
 		configArgs[len(configArgs)-1] += variant.Equator + proxyServer
 		return configArgs, configCmd
 	}
 
+	// Or otherwise just append it as an argument
 	configArgs = append(configArgs, proxyServer)
 
 	return configArgs, configCmd
 }
 
-func getVariants(variants []*util.Variant, configCmd, proxyServer string) []*util.Command {
+func generateCommands(variants []*util.Variant, configCmd, proxyServer string) []*util.Command {
 	var commands []*util.Command
 
+	// Generate one command per variant
 	for _, variant := range variants {
 		replaceVariable := variant.Type == util.VARIABLE
 
 		configArgs, configCmd := readArgs(replaceVariable, variant.Arguments, configCmd)
-
 		configArgs, configCmd = applyProxy(configArgs, configCmd, proxyServer, variant)
 
 		commands = append(commands, &util.Command{Name: configCmd, Arguments: configArgs})

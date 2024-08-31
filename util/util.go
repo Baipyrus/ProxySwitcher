@@ -2,10 +2,13 @@ package util
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"os/exec"
+	"strings"
 )
 
+// Create a single powershell process and leave closing, input and output open
 func ReadyCmd() (*io.WriteCloser, func() error, error) {
 	cmd := exec.Command("powershell", "-NoLogo", "-NoProfile", "-Command", "-")
 
@@ -18,17 +21,29 @@ func ReadyCmd() (*io.WriteCloser, func() error, error) {
 		return nil, nil, err
 	}
 
-	if err := cmd.Start(); err != nil {
+	err = cmd.Start()
+	if err != nil {
 		return nil, nil, err
 	}
 
 	return &stdin, func() error {
+		// Close stdin pipe
 		stdin.Close()
 
-		if err := cmd.Wait(); err != nil {
+		// Wait for command to flush
+		err := cmd.Wait()
+		if err != nil {
 			return err
 		}
 
 		return nil
 	}, nil
+}
+
+func ExecCmds(commands []*Command, stdin *io.WriteCloser) {
+	for _, command := range commands {
+		cmdArgs := strings.Join(command.Arguments, " ")
+		cmdStr := fmt.Sprintf("%s %s", command.Name, cmdArgs)
+		fmt.Fprintln(*stdin, cmdStr)
+	}
 }
