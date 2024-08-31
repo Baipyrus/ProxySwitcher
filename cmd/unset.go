@@ -1,11 +1,7 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-	"os/signal"
-	"syscall"
-
+	"github.com/Baipyrus/ProxySwitcher/proxy"
 	"github.com/spf13/cobra"
 )
 
@@ -14,13 +10,7 @@ var unsetCmd = &cobra.Command{
 	Use:   "unset",
 	Short: "Disable the current internet proxy settings",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Unsetting Proxy Settings...\n")
-
-		// Block process until interrupted
-		done := make(chan os.Signal, 1)
-		signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)
-		fmt.Println("Blocking, press ctrl+c to continue...")
-		<-done
+		proxy.Unset()
 	},
 }
 
