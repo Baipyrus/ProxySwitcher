@@ -2,9 +2,62 @@ package proxy
 
 import (
 	"errors"
+	"strings"
 
+	"github.com/Baipyrus/ProxySwitcher/util"
 	"golang.org/x/sys/windows/registry"
 )
+
+func readArgs(replaceVariable bool, args []string, configCmd string) ([]string, string) {
+	var configArgs []string
+
+	for _, arg := range args {
+		if !replaceVariable {
+			configArgs = append(configArgs, arg)
+			continue
+		}
+
+		configCmd = strings.Replace(configCmd, "$PRSW_ARG", arg, 1)
+	}
+
+	return configArgs, configCmd
+}
+
+func applyProxy(configArgs []string, configCmd string, proxyServer string, variant *util.Variant) ([]string, string) {
+	if proxyServer == "" {
+		return configArgs, configCmd
+	}
+
+	if variant.Type == util.VARIABLE && strings.Count(configCmd, "$PRSW_ARG") == 1 {
+		configCmd = strings.Replace(configCmd, "$PRSW_ARG", proxyServer, 1)
+		return configArgs, configCmd
+	}
+
+	if variant.Equator != "" {
+		configArgs[len(configArgs)-1] += variant.Equator + proxyServer
+		return configArgs, configCmd
+	}
+
+	configArgs = append(configArgs, proxyServer)
+
+	return configArgs, configCmd
+}
+
+func getVariants(variants []*util.Variant, configCmd, proxyServer string) []*util.Command {
+	var commands []*util.Command
+
+	for _, variant := range variants {
+		replaceVariable := variant.Type == util.VARIABLE
+
+		configArgs, configCmd := readArgs(replaceVariable, variant.Arguments, configCmd)
+
+		configArgs, configCmd = applyProxy(configArgs, configCmd, proxyServer, variant)
+
+		commands = append(commands, &util.Command{Name: configCmd, Arguments: configArgs})
+	}
+
+	return commands
+}
 
 func ReadSystemProxy() (*Proxy, error) {
 	key, err := registry.OpenKey(registry.CURRENT_USER, `Software\Microsoft\Windows\CurrentVersion\Internet Settings`, registry.QUERY_VALUE)
