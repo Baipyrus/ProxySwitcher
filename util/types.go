@@ -19,3 +19,8 @@ type Variant struct {
 	Type      Type     `json:"type,omitempty"`
 	Equator   string   `json:"equator,omitempty"`
 }
+
+type Command struct {
+	Name      string
+	Arguments []string
+}
