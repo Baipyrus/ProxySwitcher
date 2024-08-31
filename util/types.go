@@ -7,17 +7,17 @@ type Config struct {
 	Unset []*Variant `json:"unset,omitempty"`
 }
 
-type Type string
+type VariantType string
 
 const (
-	TEXT     Type = "text"
-	VARIABLE Type = "variable"
+	TEXT     VariantType = "text"
+	VARIABLE VariantType = "variable"
 )
 
 type Variant struct {
-	Arguments []string `json:"args"`
-	Type      Type     `json:"type,omitempty"`
-	Equator   string   `json:"equator,omitempty"`
+	Arguments []string    `json:"args"`
+	Type      VariantType `json:"type,omitempty"`
+	Equator   string      `json:"equator,omitempty"`
 }
 
 type Command struct {
