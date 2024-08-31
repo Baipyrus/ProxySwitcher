@@ -22,6 +22,12 @@ var saveCmd = &cobra.Command{
 		fmt.Print("Command? ")
 		fmt.Scanln(&command)
 
+		fmt.Println("\nPrompting 'set' variants:")
+		set := util.PromptVariants()
+
+		fmt.Println("\nPrompting 'unset' variants:")
+		unset := util.PromptVariants()
+
 		config := util.Config{Name: name, Cmd: command, Set: set, Unset: unset}
 
 		fmt.Println("\n\nPlease confirm the following data:")
