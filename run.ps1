@@ -1,3 +1,6 @@
+# Get inetcpl proxy settings
+$settings = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings';
+
 # Load required assemblies for Windows Forms
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
@@ -5,7 +8,11 @@ Add-Type -AssemblyName System.Drawing
 # Create a new NotifyIcon
 $trayIcon = New-Object System.Windows.Forms.NotifyIcon
 # Use a default application icon
-$trayIcon.Icon = './assets/ICON_Disabled.ico'
+$trayIcon.Icon = if ($settings.proxyEnable)
+{ "./assets/ICON_Enabled.ico" 
+} else
+{ "./assets/ICON_Disabled.ico" 
+}
 $trayIcon.Text = 'ProxySwitcher'
 $trayIcon.Visible = $true
 
