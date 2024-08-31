@@ -6,21 +6,21 @@ import (
 	"os"
 )
 
-func ReadConfigs() ([]Config, error) {
-	file, readErr := os.Open("configs.json")
+func ReadConfigs() ([]*Config, error) {
+	file, err := os.Open("configs.json")
 
-	if readErr != nil {
-		return nil, readErr
+	if err != nil {
+		return nil, err
 	}
 	defer file.Close()
 
 	bytes, _ := io.ReadAll(file)
 
-	var config []Config
-	unmarshalErr := json.Unmarshal(bytes, &config)
+	var config []*Config
+	err = json.Unmarshal(bytes, &config)
 
-	if unmarshalErr != nil {
-		return nil, unmarshalErr
+	if err != nil {
+		return nil, err
 	}
 	return config, nil
 }
