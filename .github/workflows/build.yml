@@ -35,6 +35,8 @@ jobs:
       run: go build -o build/ -v ./...
 
     - name: Create release with asset
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         gh release create "${{ github.ref_name }}" \
             --title "Release ${{ github.ref_name }}" \
