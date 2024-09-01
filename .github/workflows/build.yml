@@ -34,11 +34,6 @@ jobs:
     - name: Build project
       run: go build -o build/ -v ./...
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        path: build/ProxySwitcher.exe
-
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
