@@ -5,9 +5,7 @@ name: Go
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    tags: 'v*'
 
 env:
   GOOS: windows
@@ -18,9 +16,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-    - run: sed -En 's/^go (.*)$/GO_VERSION=\1/p' go.mod >> $GITHUB_ENV
+    - name: Get GoLang version
+      run: sed -En 's/^go (.*)$/GO_VERSION=\1/p' go.mod >> $GITHUB_ENV
+    
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
@@ -33,7 +34,21 @@ jobs:
     - name: Build project
       run: go build -o build/ -v ./...
 
-    - name: Upload executable
-      uses: actions/upload-artifact@v4
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        path: build/ProxySwitcher.exe
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+
+    - name: Upload executable
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: build/ProxySwitcher.exe
+        asset_name: ProxySwitcher.exe
+        asset_content_type: application/octet-stream
