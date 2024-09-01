@@ -34,21 +34,8 @@ jobs:
     - name: Build project
       run: go build -o build/ -v ./...
 
-    - name: Create release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-
-    - name: Upload release asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/ProxySwitcher.exe
-        asset_name: ProxySwitcher.exe
-        asset_content_type: x-msdownload
+    - name: Create release with asset
+      run: |
+        gh release create "${{ github.ref_name }}" \
+            --title "Release ${{ github.ref_name }}" \
+            build/ProxySwitcher.exe
