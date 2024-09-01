@@ -1,7 +1,7 @@
 # This workflow will build a golang project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
 
-name: Build
+name: Publish
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
       run: sed -En 's/^go (.*)$/GO_VERSION=\1/p' go.mod >> $GITHUB_ENV
     
     - name: Set up Go
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v5
       with:
           go-version: "${{ env.GO_VERSION }}"
 
@@ -39,3 +39,21 @@ jobs:
       with:
         name: ProxySwitcher
         path: build/*
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: ProxySwitcher
+
+    - name: Create release
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh release create "${{ github.event.workflow_run.head_ref }}" \
+            --title "Release ${{ github.event.workflow_run.head_ref }}" \
+            ProxySwitcher
