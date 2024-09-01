@@ -1,7 +1,7 @@
 # This workflow will build a golang project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
 
-name: Go
+name: Build
 
 on:
   push:
@@ -34,10 +34,8 @@ jobs:
     - name: Build project
       run: go build -o build/ -v ./...
 
-    - name: Create release with asset
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        gh release create "${{ github.ref_name }}" \
-            --title "Release ${{ github.ref_name }}" \
-            build/ProxySwitcher.exe
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ProxySwitcher
+        path: build/*
