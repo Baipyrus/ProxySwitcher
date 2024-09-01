@@ -28,8 +28,7 @@ jobs:
           go-version: "${{ env.GO_VERSION }}"
 
     - name: Install dependencies
-      run: |
-        go get .
+      run: go get .
 
     - name: Build project
       run: go build -o build/ -v ./...
@@ -52,7 +51,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: ProxySwitcher
-        path: '${{ github.workspace }}/artifacts/'
+        path: artifacts/
 
     - name: Create release
       env:
@@ -60,4 +59,4 @@ jobs:
       run: |
         gh release create "${{ github.ref_name }}" \
           --title "Release ${{ github.ref_name }}" \
-          '${{ github.workspace }}/artifacts/'
+          artifacts/*
