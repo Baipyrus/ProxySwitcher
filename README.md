@@ -17,13 +17,28 @@ save configurations, or exit the application.
 
 ## Installation
 
-1. Clone the repository:
+- Simply run the following command in a Windows PowerShell:
+
+    ```powershell
+    # Using 'Invoke-RestMethod' and 'Invoke-Expression'
+    irm 'https://raw.githubusercontent.com/Baipyrus/ProxySwitcher/main/install.ps1'
+     | iex
+    ```
+
+## Usage
+
+Generally, the [Installation](#installation) step will install both the program,
+its assets, and a shortcut for the Windows Startmenu for your current userprofile.
+You *could* go into the program directory (`C:\Users\[Username]\AppData\Local\Programs\ProxySwitcher\`)
+manually and run the program from your CLI in there, but it is recommended to simply
+use the program in system tray or directly via code. This latter option will be explained
+next:
+
+- Clone the repository:
 
     ```powersell
     git clone https://github.com/Baipyrus/ProxySwitcher.git
     ```
-
-## Usage
 
 ### CLI Commands
 
@@ -43,6 +58,15 @@ save configurations, or exit the application.
 
     ```powersell
     go run . save
+    ```
+
+## Building
+
+1. Clone the repository as seen above in [Usage](#usage)
+2. Run the following command:
+
+    ```powershell
+    GOOS=windows GOARCH=amd64 go build -o build/ -v ./...
     ```
 
 ### Configuration
