@@ -31,10 +31,11 @@ jobs:
         go get .
 
     - name: Build project
-      run: go build ./...
+      run: go build -v ./...
 
+    - run: ls -laR
     - name: Upload executable
       uses: actions/upload-artifact@v4
       with:
         name: ProxySwitcher Executable
-        path: ./ProxySwitcher.exe
+        path: '**/ProxySwitcher.exe'
