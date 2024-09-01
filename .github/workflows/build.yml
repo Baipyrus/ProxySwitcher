@@ -36,5 +36,4 @@ jobs:
     - name: Upload executable
       uses: actions/upload-artifact@v4
       with:
-        name: ProxySwitcher Executable
         path: build/ProxySwitcher.exe
