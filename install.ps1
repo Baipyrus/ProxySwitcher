@@ -1,7 +1,13 @@
 $startupDir = (Get-Location).Path
-$destinationDir = "$env:LOCALAPPDATA\Programs"
 $startmenuDir = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs"
 
+# Create Local Program Directory if not exists
+$destinationDir = "$env:LOCALAPPDATA\Programs"
+if (-not (Test-Path $destinationDir))
+{ New-Item -ItemType Directory -Path $destinationDir | Out-Null
+}
+
+# Detect Powershell Version and Path
 Write-Host "Detecting Powershell Executable..." -ForegroundColor Cyan
 $powershellPath = "$PSHOME"
 if (Test-Path "$powershellPath\pwsh.exe")
