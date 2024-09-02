@@ -1,7 +1,14 @@
 $startupDir = (Get-Location).Path
 $destinationDir = "$env:LOCALAPPDATA\Programs"
 $startmenuDir = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs"
-$powershellPath = "$PSHOME\powershell.exe"
+
+Write-Host "Detecting Powershell Executable..." -ForegroundColor Cyan
+$powershellPath = "$PSHOME"
+if (Test-Path "$powershellPath\pwsh.exe")
+{ $powershellPath = "$powershellPath\pwsh.exe"
+} else
+{ $powershellPath = "$powershellPath\powershell.exe"
+}
 
 # Create program directory and relocate
 Write-Host "Creating program directory in Userprofile..." -ForegroundColor Cyan
