@@ -21,8 +21,7 @@ save configurations, or exit the application.
 
     ```powershell
     # Using 'Invoke-RestMethod' and 'Invoke-Expression'
-    irm 'https://raw.githubusercontent.com/Baipyrus/ProxySwitcher/main/install.ps1'
-     | iex
+    irm 'https://raw.githubusercontent.com/Baipyrus/ProxySwitcher/main/install.ps1 | iex
     ```
 
 ## Usage
