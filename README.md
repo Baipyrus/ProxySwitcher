@@ -60,15 +60,6 @@ next:
     go run . save
     ```
 
-## Building
-
-1. Clone the repository as seen above in [Usage](#usage)
-2. Run the following command:
-
-    ```powershell
-    GOOS=windows GOARCH=amd64 go build -o build/ -v ./...
-    ```
-
 ### Configuration
 
 The programs for which the proxy settings should be managed are stored in a `configs.json`
@@ -125,3 +116,12 @@ Right-click the system tray icon to:
 - **Disable Proxy**: Disable all saved proxies including system proxy.
 - **Save New Config**: Open a prompt to save a new proxy configuration.
 - **Exit**: Close the application.
+
+## Building
+
+1. Clone the repository as seen above in [Usage](#usage)
+2. Run the following command:
+
+    ```powershell
+    GOOS=windows GOARCH=amd64 go build -o build/ -v ./...
+    ```
