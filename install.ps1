@@ -57,6 +57,11 @@ $assetPath = "$programPath\assets\ICON_Enabled.ico"
 DownloadFile -url https://raw.githubusercontent.com/Baipyrus/ProxySwitcher/main/assets/ICON_Disabled.ico
 DownloadFile -url https://raw.githubusercontent.com/Baipyrus/ProxySwitcher/main/assets/ICON_Enabled.ico
 
+# Add program to PATH for cli application
+$userpath = [System.Environment]::GetEnvironmentVariable("PATH", "User")
+$userpath = $userpath + ";$programDir"
+[System.Environment]::SetEnvironmentVariable("PATH", $userpath, "User")
+
 # Create Startmenu Shortcut
 Write-Host "Creating shortcuts for easy access..." -ForegroundColor Cyan
 $assetsDir = "assets"
