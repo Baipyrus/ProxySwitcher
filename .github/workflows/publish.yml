@@ -40,7 +40,8 @@ jobs:
           cp run.ps1 build/
           cp install.ps1 build/
           cp configs.json build/
-          cp -r assets/ build/
+          mkdir -p build/assets/
+          cp -r assets/*.ico build/assets/
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
