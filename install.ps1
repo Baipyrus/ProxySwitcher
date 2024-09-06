@@ -37,7 +37,7 @@ if ($isRelease)
 {
         # Copy release assets to program dir
         Write-Host "Copying program into local directory..." -ForegroundColor Cyan
-        Copy-Item -Path "$releaseDir\*" -Destination $programPath -Force
+        Copy-Item -Path "$releaseDir\*" -Destination $programPath -Recurse -Force
 } else
 {
         # Download release files from github as-is

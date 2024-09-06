@@ -66,7 +66,7 @@ jobs:
     - name: Zip artifacts for release
       run: |
         cd artifacts/
-        zip ../ProxySwitcher.zip *
+        zip -r ../ProxySwitcher.zip *
 
     - name: Create release
       env:
