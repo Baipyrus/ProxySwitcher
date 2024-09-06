@@ -19,7 +19,7 @@ save configurations, or exit the application.
 
 You should download the [latest release](https://github.com/Baipyrus/ProxySwitcher/releases)
 archive, **extract all contents** to a dedicated directory and then simply execute
-the [`.\install.ps1`](.\install.ps1) script within a Windows Powershell.
+the [`.\install.ps1`](./install.ps1) script within a Windows Powershell.
 
 Alternatively, you could simply run the following command in a Windows PowerShell:
 
