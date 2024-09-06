@@ -17,12 +17,16 @@ save configurations, or exit the application.
 
 ## Installation
 
-- Simply run the following command in a Windows PowerShell:
+You should download the [latest release](https://github.com/Baipyrus/ProxySwitcher/releases)
+archive, **extract all contents** to a dedicated directory and then simply execute
+the [`.\install.ps1`](.\install.ps1) script within a Windows Powershell.
 
-    ```powershell
-    # Using 'Invoke-RestMethod' and 'Invoke-Expression'
-    irm 'https://raw.githubusercontent.com/Baipyrus/ProxySwitcher/main/install.ps1' | iex
-    ```
+Alternatively, you could simply run the following command in a Windows PowerShell:
+
+```powershell
+# Using 'Invoke-RestMethod' and 'Invoke-Expression'
+irm 'https://raw.githubusercontent.com/Baipyrus/ProxySwitcher/main/install.ps1' | iex
+```
 
 ## Usage
 

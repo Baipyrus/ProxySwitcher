@@ -16,6 +16,10 @@ if (Test-Path "$powershellPath\pwsh.exe")
 { $powershellPath = "$powershellPath\powershell.exe"
 }
 
+# Detect if current dir is release asset
+$isRelease = Test-Path ".\ProxySwitcher.exe"
+$releaseDir = (Get-Location).Path
+
 # Create program directory and relocate
 Write-Host "Creating program directory in Userprofile..." -ForegroundColor Cyan
 $programDir = "ProxySwitcher"
@@ -29,33 +33,23 @@ if ($startupDir -ne $destinationDir)
 Set-Location $programDir
 $programPath = "$destinationDir\$programDir"
 
-# Download functional files from github as-is
-Write-Host "Downloading program into local directory..." -ForegroundColor Cyan
-function DownloadFile
+if ($isRelease)
 {
-        param (
-                [string]$url
-        )
+        # Copy release assets to program dir
+        Write-Host "Copying program into local directory..." -ForegroundColor Cyan
+        Copy-Item -Path "$releaseDir\*" -Destination $programPath -Recurse -Force
+} else
+{
+        # Specify temporary output Path
+        $tmpPRSWzip = "$env:TMP\ProxySwitcher.zip"
 
-        $fileName = $url.Split("/")[-1]
-        Invoke-RestMethod $url -OutFile $fileName
+        # Download release files from github as-is
+        Write-Host "Downloading program into local directory..." -ForegroundColor Cyan
+        Invoke-RestMethod "https://github.com/Baipyrus/ProxySwitcher/releases/latest/download/ProxySwitcher.zip" -OutFile $tmpPRSWzip
+
+        # Expand Archive to program directory
+        Expand-Archive $tmpPRSWzip -DestinationPath $programPath -Force
 }
-DownloadFile -url https://github.com/Baipyrus/ProxySwitcher/releases/latest/download/ProxySwitcher.exe
-DownloadFile -url https://raw.githubusercontent.com/Baipyrus/ProxySwitcher/main/configs.json
-DownloadFile -url https://raw.githubusercontent.com/Baipyrus/ProxySwitcher/main/run.ps1
-
-# Create assets directory and relocate
-Write-Host "Downloading assets into local directory..." -ForegroundColor Cyan
-$assetsDir = "assets"
-if (-not (Test-Path $assetsDir))
-{ New-Item -ItemType Directory -Path $assetsDir | Out-Null
-}
-Set-Location $assetsDir
-$assetPath = "$programPath\assets\ICON_Enabled.ico"
-
-# Download asset files from github
-DownloadFile -url https://raw.githubusercontent.com/Baipyrus/ProxySwitcher/main/assets/ICON_Disabled.ico
-DownloadFile -url https://raw.githubusercontent.com/Baipyrus/ProxySwitcher/main/assets/ICON_Enabled.ico
 
 # Add program to PATH for cli application
 $userpath = [System.Environment]::GetEnvironmentVariable("PATH", "User")
@@ -64,14 +58,13 @@ $userpath = $userpath + ";$programDir"
 
 # Create Startmenu Shortcut
 Write-Host "Creating shortcuts for easy access..." -ForegroundColor Cyan
-$assetsDir = "assets"
 $shell = New-Object -comObject WScript.Shell
 $shortcutPath = "$startmenuDir\Proxy Switcher.lnk"
 $shortcut = $shell.CreateShortcut($shortcutPath)
 $shortcut.TargetPath = $powershellPath
 $shortcut.WorkingDirectory = $programPath
 $shortcut.Arguments = "-ExecutionPolicy Bypass -NonInteractive -NoProfile -WindowStyle Hidden -File ""$programPath\run.ps1"""
-$shortcut.IconLocation = $assetPath
+$shortcut.IconLocation = "$programPath\assets\ICON_Enabled.ico"
 $shortcut.WindowStyle = 7
 $shortcut.Save()
 

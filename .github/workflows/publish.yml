@@ -5,7 +5,9 @@ name: Publish
 
 on:
   push:
-    tags: 'v*'
+    tags:
+      - 'v*'
+      - 'pre*'
 
 jobs:
   build:
@@ -33,11 +35,19 @@ jobs:
     - name: Build project
       run: go build -o build/ -v ./...
 
+    - name: Copying skripts and assets
+      run: |
+          cp run.ps1 build/
+          cp install.ps1 build/
+          cp configs.json build/
+          mkdir -p build/assets/
+          cp -r assets/*.ico build/assets/
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: ProxySwitcher
-        path: build/*
+        path: build/
 
   release:
     runs-on: ubuntu-latest
@@ -53,10 +63,26 @@ jobs:
         name: ProxySwitcher
         path: artifacts/
 
+    - name: Zip artifacts for release
+      run: |
+        cd artifacts/
+        zip -r ../ProxySwitcher.zip *
+
     - name: Create release
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        RELEASE_NAME: ${{ github.ref_name }}
       run: |
-        gh release create "${{ github.ref_name }}" \
-          --title "Release ${{ github.ref_name }}" \
-          artifacts/*
+        # If the release name starts with "pre", draft release
+        FLAGS=()
+        TITLE="Release $RELEASE_NAME"
+        if [[ "$RELEASE_NAME" == pre* ]]; then
+          FLAGS+=(--prerelease --draft)
+          TITLE="Prerelease $RELEASE_NAME"
+        fi
+
+        # Create the release with the appropriate flags
+        gh release create "$RELEASE_NAME" \
+          --title "$TITLE" \
+          "${FLAGS[@]}" \
+          ProxySwitcher.zip
