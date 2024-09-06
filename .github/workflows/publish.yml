@@ -33,11 +33,18 @@ jobs:
     - name: Build project
       run: go build -o build/ -v ./...
 
+    - name: Copying skripts and assets
+      run: |
+          cp run.ps1 build/
+          cp install.ps1 build/
+          cp configs.json build/
+          cp -r assets/ build/
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: ProxySwitcher
-        path: build/*
+        path: build/
 
   release:
     runs-on: ubuntu-latest
@@ -53,10 +60,15 @@ jobs:
         name: ProxySwitcher
         path: artifacts/
 
+    - name: Zip artifacts for release
+      run: |
+        cd artifacts/
+        zip ../ProxySwitcher.zip *
+
     - name: Create release
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         gh release create "${{ github.ref_name }}" \
           --title "Release ${{ github.ref_name }}" \
-          artifacts/*
+          ProxySwitcher.zip
