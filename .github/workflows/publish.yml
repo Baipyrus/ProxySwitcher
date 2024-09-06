@@ -73,13 +73,15 @@ jobs:
         RELEASE_NAME: ${{ github.ref_name }}
       run: |
         # If the release name starts with "pre", draft release
-        FLAGS=""
+        FLAGS=()
+        TITLE="Release $RELEASE_NAME"
         if [[ "$RELEASE_NAME" == pre* ]]; then
-          FLAGS="--prerelease --draft"
+          FLAGS+=(--prerelease --draft)
+          TITLE="Prerelease $RELEASE_NAME"
         fi
 
         # Create the release with the appropriate flags
         gh release create "$RELEASE_NAME" \
-          --title "Release $RELEASE_NAME" \
-          $FLAGS \
+          --title "$TITLE" \
+          "${FLAGS[@]}" \
           ProxySwitcher.zip
