@@ -48,7 +48,7 @@ if ($isRelease)
         Invoke-RestMethod "https://github.com/Baipyrus/ProxySwitcher/releases/latest/download/ProxySwitcher.zip" -OutFile $tmpPRSWzip
 
         # Expand Archive to program directory
-        Expand-Archive $tmpPRSWzip -DestinationPath $programPath
+        Expand-Archive $tmpPRSWzip -DestinationPath $programPath -Force
 }
 
 # Add program to PATH for cli application
