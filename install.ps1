@@ -40,12 +40,15 @@ if ($isRelease)
         Copy-Item -Path "$releaseDir\*" -Destination $programPath -Recurse -Force
 } else
 {
+        # Specify temporary output Path
+        $tmpPRSWzip = "$env:TMP\ProxySwitcher.zip"
+
         # Download release files from github as-is
         Write-Host "Downloading program into local directory..." -ForegroundColor Cyan
-        Invoke-RestMethod "https://github.com/Baipyrus/ProxySwitcher/releases/latest/download/ProxySwitcher.zip" -OutFile $env:TMP
+        Invoke-RestMethod "https://github.com/Baipyrus/ProxySwitcher/releases/latest/download/ProxySwitcher.zip" -OutFile $tmpPRSWzip
 
         # Expand Archive to program directory
-        Expand-Archive "$env:TMP\ProxySwitcher.zip" -DestinationPath $programPath
+        Expand-Archive $tmpPRSWzip -DestinationPath $programPath
 }
 
 # Add program to PATH for cli application
