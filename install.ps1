@@ -29,33 +29,12 @@ if ($startupDir -ne $destinationDir)
 Set-Location $programDir
 $programPath = "$destinationDir\$programDir"
 
-# Download functional files from github as-is
+# Download release files from github as-is
 Write-Host "Downloading program into local directory..." -ForegroundColor Cyan
-function DownloadFile
-{
-        param (
-                [string]$url
-        )
+Invoke-RestMethod https://github.com/Baipyrus/ProxySwitcher/releases/latest/download/ProxySwitcher.zip -OutFile $env:TMP
 
-        $fileName = $url.Split("/")[-1]
-        Invoke-RestMethod $url -OutFile $fileName
-}
-DownloadFile -url https://github.com/Baipyrus/ProxySwitcher/releases/latest/download/ProxySwitcher.exe
-DownloadFile -url https://raw.githubusercontent.com/Baipyrus/ProxySwitcher/main/configs.json
-DownloadFile -url https://raw.githubusercontent.com/Baipyrus/ProxySwitcher/main/run.ps1
-
-# Create assets directory and relocate
-Write-Host "Downloading assets into local directory..." -ForegroundColor Cyan
-$assetsDir = "assets"
-if (-not (Test-Path $assetsDir))
-{ New-Item -ItemType Directory -Path $assetsDir | Out-Null
-}
-Set-Location $assetsDir
-$assetPath = "$programPath\assets\ICON_Enabled.ico"
-
-# Download asset files from github
-DownloadFile -url https://raw.githubusercontent.com/Baipyrus/ProxySwitcher/main/assets/ICON_Disabled.ico
-DownloadFile -url https://raw.githubusercontent.com/Baipyrus/ProxySwitcher/main/assets/ICON_Enabled.ico
+# Expand Archive to program directory
+Expand-Archive "$env:TMP\ProxySwitcher.zip" -DestinationPath $programPath
 
 # Add program to PATH for cli application
 $userpath = [System.Environment]::GetEnvironmentVariable("PATH", "User")
@@ -64,14 +43,13 @@ $userpath = $userpath + ";$programDir"
 
 # Create Startmenu Shortcut
 Write-Host "Creating shortcuts for easy access..." -ForegroundColor Cyan
-$assetsDir = "assets"
 $shell = New-Object -comObject WScript.Shell
 $shortcutPath = "$startmenuDir\Proxy Switcher.lnk"
 $shortcut = $shell.CreateShortcut($shortcutPath)
 $shortcut.TargetPath = $powershellPath
 $shortcut.WorkingDirectory = $programPath
 $shortcut.Arguments = "-ExecutionPolicy Bypass -NonInteractive -NoProfile -WindowStyle Hidden -File ""$programPath\run.ps1"""
-$shortcut.IconLocation = $assetPath
+$shortcut.IconLocation = "$programPath\assets\ICON_Enabled.ico"
 $shortcut.WindowStyle = 7
 $shortcut.Save()
 
