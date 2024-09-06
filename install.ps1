@@ -16,6 +16,10 @@ if (Test-Path "$powershellPath\pwsh.exe")
 { $powershellPath = "$powershellPath\powershell.exe"
 }
 
+# Detect if current dir is release asset
+$isRelease = Test-Path ".\ProxySwitcher.exe"
+$releaseDir = (Get-Location).Path
+
 # Create program directory and relocate
 Write-Host "Creating program directory in Userprofile..." -ForegroundColor Cyan
 $programDir = "ProxySwitcher"
@@ -29,12 +33,20 @@ if ($startupDir -ne $destinationDir)
 Set-Location $programDir
 $programPath = "$destinationDir\$programDir"
 
-# Download release files from github as-is
-Write-Host "Downloading program into local directory..." -ForegroundColor Cyan
-Invoke-RestMethod https://github.com/Baipyrus/ProxySwitcher/releases/latest/download/ProxySwitcher.zip -OutFile $env:TMP
+if ($isRelease)
+{
+        # Copy release assets to program dir
+        Write-Host "Copying program into local directory..." -ForegroundColor Cyan
+        Copy-Item -Path "$releaseDir\*" -Destination $programPath -Force
+} else
+{
+        # Download release files from github as-is
+        Write-Host "Downloading program into local directory..." -ForegroundColor Cyan
+        Invoke-RestMethod https://github.com/Baipyrus/ProxySwitcher/releases/latest/download/ProxySwitcher.zip -OutFile $env:TMP
 
-# Expand Archive to program directory
-Expand-Archive "$env:TMP\ProxySwitcher.zip" -DestinationPath $programPath
+        # Expand Archive to program directory
+        Expand-Archive "$env:TMP\ProxySwitcher.zip" -DestinationPath $programPath
+}
 
 # Add program to PATH for cli application
 $userpath = [System.Environment]::GetEnvironmentVariable("PATH", "User")
