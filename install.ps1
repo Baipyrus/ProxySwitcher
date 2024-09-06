@@ -42,7 +42,7 @@ if ($isRelease)
 {
         # Download release files from github as-is
         Write-Host "Downloading program into local directory..." -ForegroundColor Cyan
-        Invoke-RestMethod https://github.com/Baipyrus/ProxySwitcher/releases/latest/download/ProxySwitcher.zip -OutFile $env:TMP
+        Invoke-RestMethod "https://github.com/Baipyrus/ProxySwitcher/releases/latest/download/ProxySwitcher.zip" -OutFile $env:TMP
 
         # Expand Archive to program directory
         Expand-Archive "$env:TMP\ProxySwitcher.zip" -DestinationPath $programPath
