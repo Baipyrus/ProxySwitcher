@@ -66,27 +66,33 @@ func generateCommands(variants []*util.Variant, configCmd, proxyServer string) [
 }
 
 func ReadSystemProxy() (*Proxy, error) {
+	// Open registry key for internet settings
 	key, err := registry.OpenKey(registry.CURRENT_USER, `Software\Microsoft\Windows\CurrentVersion\Internet Settings`, registry.QUERY_VALUE)
 	if err != nil {
 		return nil, err
 	}
 	defer key.Close()
 
+	// Read registry value for proxy enabled
 	enableVal, _, err := key.GetIntegerValue("proxyEnable")
 	if err != nil {
 		return nil, err
 	}
+	// Convert int value to bool
 	enabled := enableVal != 0
 
+	// Read registry value for proxy servers
 	servers, _, err := key.GetStringValue("proxyServer")
 	if err != nil && !errors.Is(err, registry.ErrNotExist) {
 		return nil, err
 	}
 
+	// Use entire value if singular server
 	if !strings.ContainsAny(servers, ";=") {
 		return &Proxy{Enabled: enabled, Server: servers}, nil
 	}
 
+	// Map proxy servers into dictionary
 	serverSplit := strings.Split(servers, ";")
 	serverDict := make(map[string]string)
 	for _, substr := range serverSplit {
@@ -95,24 +101,29 @@ func ReadSystemProxy() (*Proxy, error) {
 		serverDict[key] = value
 	}
 
+	// Grab HTTP proxy server first
 	if serverDict["http"] != "" {
 		return &Proxy{Enabled: enabled, Server: serverDict["http"]}, nil
 	}
 
+	// Grab HTTP proxy server second
 	if serverDict["https"] != "" {
 		return &Proxy{Enabled: enabled, Server: serverDict["https"]}, nil
 	}
 
-	return nil, errors.New("You need configure either HTTP or HTTPS proxy to proceed.")
+	// Throw error on no usable proxy server
+	return nil, errors.New("You need to configure either HTTP or HTTPS proxy servers to proceed.")
 }
 
 func SetSystemProxy(state bool) error {
+	// Open registry key for internet settings
 	key, err := registry.OpenKey(registry.CURRENT_USER, `Software\Microsoft\Windows\CurrentVersion\Internet Settings`, registry.SET_VALUE)
 	if err != nil {
 		return err
 	}
 	defer key.Close()
 
+	// Get state as int instead of bool
 	var value uint32
 	if state {
 		value = 1
@@ -120,6 +131,7 @@ func SetSystemProxy(state bool) error {
 		value = 0
 	}
 
+	// Write registry value to enable/disable proxy
 	err = key.SetDWordValue("proxyEnable", value)
 	return err
 }
