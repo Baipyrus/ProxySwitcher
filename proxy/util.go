@@ -72,17 +72,38 @@ func ReadSystemProxy() (*Proxy, error) {
 	}
 	defer key.Close()
 
-	enabled, _, err := key.GetIntegerValue("proxyEnable")
+	enableVal, _, err := key.GetIntegerValue("proxyEnable")
 	if err != nil {
 		return nil, err
 	}
+	enabled := enableVal != 0
 
-	server, _, err := key.GetStringValue("proxyServer")
+	servers, _, err := key.GetStringValue("proxyServer")
 	if err != nil && !errors.Is(err, registry.ErrNotExist) {
 		return nil, err
 	}
 
-	return &Proxy{Enabled: enabled != 0, Server: server}, nil
+	if !strings.ContainsAny(servers, ";=") {
+		return &Proxy{Enabled: enabled, Server: servers}, nil
+	}
+
+	serverSplit := strings.Split(servers, ";")
+	serverDict := make(map[string]string)
+	for _, substr := range serverSplit {
+		subSplit := strings.Split(substr, "=")
+		key, value := subSplit[0], subSplit[1]
+		serverDict[key] = value
+	}
+
+	if serverDict["http"] != "" {
+		return &Proxy{Enabled: enabled, Server: serverDict["http"]}, nil
+	}
+
+	if serverDict["https"] != "" {
+		return &Proxy{Enabled: enabled, Server: serverDict["https"]}, nil
+	}
+
+	return nil, errors.New("You need configure either HTTP or HTTPS proxy to proceed.")
 }
 
 func SetSystemProxy(state bool) error {
