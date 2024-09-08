@@ -1,6 +1,8 @@
 package proxy
 
 import (
+	"log"
+
 	"github.com/Baipyrus/ProxySwitcher/util"
 )
 
@@ -8,7 +10,12 @@ func Unset() {
 	stdin, closeFunc, _ := util.ReadyCmd()
 
 	// Unset system proxy, if not already
-	proxy, _ := ReadSystemProxy()
+	proxy, err := ReadSystemProxy()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	if proxy.Enabled {
 		SetSystemProxy(false)
 	}

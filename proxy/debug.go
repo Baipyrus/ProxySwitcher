@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/Baipyrus/ProxySwitcher/util"
@@ -20,7 +21,13 @@ func mapCmdsToStr(commands []*util.Command) string {
 }
 
 func Debug() {
-	proxy, _ := ReadSystemProxy()
+	proxy, err := ReadSystemProxy()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Debug system proxy configuration
 	fmt.Println("\nSystem Proxy:")
 	fmt.Printf("Enabled: %t\n", proxy.Enabled)
 	fmt.Printf("Server: %s\n\n", proxy.Server)
@@ -34,10 +41,12 @@ func Debug() {
 		}
 		fmt.Printf("Loading commands for '%s':\n", config.Name)
 
+		// Debug Proxy Set Commands
 		setCmds := generateCommands(config.Set, configCmd, "[PROXY PLACEHOLDER]")
 		fmt.Println("Set Commands:")
 		fmt.Printf("%s\n", mapCmdsToStr(setCmds))
 
+		// Debug Proxy Unset Commands
 		unsetCmds := generateCommands(config.Unset, configCmd, "")
 		fmt.Println("Unset Commands:")
 		fmt.Printf("%s\n\n", mapCmdsToStr(unsetCmds))
