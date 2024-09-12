@@ -25,7 +25,7 @@ func readArgs(replaceVariable bool, args []string, configCmd string) ([]string, 
 	return configArgs, configCmd
 }
 
-func applyProxy(configArgs []string, configCmd string, proxyServer string, variant *util.Variant) ([]string, string) {
+func applyProxy(configArgs []string, configCmd, proxyServer string, variant *util.Variant) ([]string, string) {
 	// Skip, no proxy provided
 	if proxyServer == "" {
 		return configArgs, configCmd
