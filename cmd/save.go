@@ -38,7 +38,7 @@ var saveCmd = &cobra.Command{
 		var input string
 		fmt.Print("Save this data? (Y/n) ")
 		if input == "" || strings.ToLower(input) == "y" {
-			util.SaveConfig(config)
+			util.SaveConfig(cfgFile, config)
 		}
 	},
 }
