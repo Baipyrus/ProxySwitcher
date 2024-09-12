@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func ReadConfigs() ([]*Config, error) {
+func ReadConfigs(name string) ([]*Config, error) {
 	file, err := os.Open("configs.json")
 
 	if err != nil {
@@ -25,8 +25,8 @@ func ReadConfigs() ([]*Config, error) {
 	return config, nil
 }
 
-func SaveConfig(config Config) error {
-	configs, _ := ReadConfigs()
+func SaveConfig(name string, config Config) error {
+	configs, _ := ReadConfigs(name)
 	configs = append(configs, &config)
 
 	data, err := json.Marshal(configs)
@@ -34,6 +34,6 @@ func SaveConfig(config Config) error {
 		return err
 	}
 
-	err = os.WriteFile("configs.json", data, 0666)
+	err = os.WriteFile(name, data, 0666)
 	return err
 }
