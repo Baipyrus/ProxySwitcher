@@ -88,8 +88,10 @@ func ReadSystemProxy() (*Proxy, error) {
 	}
 
 	// Use entire value if singular server
+	proxy := &Proxy{Enabled: enabled, Server: ""}
 	if !strings.ContainsAny(servers, ";=") {
-		return &Proxy{Enabled: enabled, Server: servers}, nil
+		proxy.Server = servers
+		return proxy, nil
 	}
 
 	// Map proxy servers into dictionary
@@ -103,16 +105,18 @@ func ReadSystemProxy() (*Proxy, error) {
 
 	// Grab HTTP proxy server first
 	if serverDict["http"] != "" {
-		return &Proxy{Enabled: enabled, Server: serverDict["http"]}, nil
+		proxy.Server = serverDict["http"]
+		return proxy, nil
 	}
 
 	// Grab HTTP proxy server second
 	if serverDict["https"] != "" {
-		return &Proxy{Enabled: enabled, Server: serverDict["https"]}, nil
+		proxy.Server = serverDict["https"]
+		return proxy, nil
 	}
 
-	// Throw error on no usable proxy server
-	return nil, errors.New("You need to configure either HTTP or HTTPS proxy servers to proceed.")
+	// Return with empty proxy server ("discarded"; not detected)
+	return proxy, nil
 }
 
 func SetSystemProxy(state bool) error {

@@ -21,9 +21,14 @@ func mapCmdsToStr(commands []*util.Command) string {
 
 func Debug() {
 	proxy, _ := ReadSystemProxy()
+	proxyServer := proxy.Server
+	if proxyServer == "" {
+		proxyServer = "[N/A]"
+	}
+
 	fmt.Println("\nSystem Proxy:")
 	fmt.Printf("Enabled: %t\n", proxy.Enabled)
-	fmt.Printf("Server: %s\n\n", proxy.Server)
+	fmt.Printf("Server: %s\n\n", proxyServer)
 
 	configs, _ := util.ReadConfigs()
 	for _, config := range configs {
