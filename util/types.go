@@ -15,9 +15,10 @@ const (
 )
 
 type Variant struct {
-	Arguments []string    `json:"args"`
-	Type      VariantType `json:"type,omitempty"`
-	Equator   string      `json:"equator,omitempty"`
+	Arguments    []string    `json:"args"`
+	Type         VariantType `json:"type,omitempty"`
+	Equator      string      `json:"equator,omitempty"`
+	DiscardProxy bool        `json:"discard,omitempty"`
 }
 
 type Command struct {
