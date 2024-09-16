@@ -7,7 +7,7 @@ import (
 )
 
 func ReadConfigs(name string) ([]*Config, error) {
-	file, err := os.Open("configs.json")
+	file, err := os.Open(name)
 
 	if err != nil {
 		return nil, err
