@@ -1,7 +1,10 @@
 package proxy
 
 import (
+	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/Baipyrus/ProxySwitcher/util"
@@ -19,18 +22,26 @@ func mapCmdsToStr(commands []*util.Command) string {
 	return strings.Join(output, "\n")
 }
 
-func Debug() {
+func Debug(cfgFile string) {
+	path, _ := filepath.Abs(cfgFile)
+	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
+		path = "[N/A]"
+	}
+
+	fmt.Printf("\nConfig:\n")
+	fmt.Printf("%s\n\n", path)
+
 	proxy, _ := ReadSystemProxy()
 	proxyServer := proxy.Server
 	if proxyServer == "" {
 		proxyServer = "[N/A]"
 	}
 
-	fmt.Println("\nSystem Proxy:")
+	fmt.Println("System Proxy:")
 	fmt.Printf("Enabled: %t\n", proxy.Enabled)
 	fmt.Printf("Server: %s\n\n", proxyServer)
 
-	configs, _ := util.ReadConfigs()
+	configs, _ := util.ReadConfigs(cfgFile)
 	for _, config := range configs {
 		configCmd := config.Name
 		// Use command instead of name, if given
