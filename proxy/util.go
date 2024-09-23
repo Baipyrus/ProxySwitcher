@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/Baipyrus/ProxySwitcher/util"
@@ -29,6 +30,11 @@ func applyProxy(configArgs []string, configCmd, proxyServer string, variant *uti
 	// Skip, no proxy provided or proxy option discarded
 	if proxyServer == "" || variant.DiscardProxy {
 		return configArgs, configCmd
+	}
+
+	// Surround 'proxyServer' with any given string, if provided
+	if variant.Surround != "" {
+		proxyServer = fmt.Sprintf("%[1]s%[2]s%[1]s", variant.Surround, proxyServer)
 	}
 
 	// Insert proxy only on last VARIABLE type
