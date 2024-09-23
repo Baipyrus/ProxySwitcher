@@ -7,11 +7,13 @@
                 "args": [
                     "http_proxy"
                 ],
+                "surround": "\"",
                 "type": "variable"
             }, {
                 "args": [
                     "https_proxy"
                 ],
+                "surround": "\"",
                 "type": "variable"
             }
         ],

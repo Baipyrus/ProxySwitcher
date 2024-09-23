@@ -18,6 +18,7 @@ type Variant struct {
 	Arguments    []string    `json:"args"`
 	Type         VariantType `json:"type,omitempty"`
 	Equator      string      `json:"equator,omitempty"`
+	Surround     string      `json:"surround,omitempty"`
 	DiscardProxy bool        `json:"discard,omitempty"`
 }
 
