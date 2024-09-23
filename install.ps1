@@ -56,8 +56,10 @@ if ($isRelease)
 
 # Add program to PATH for cli application
 $userpath = [System.Environment]::GetEnvironmentVariable("PATH", "User")
-$userpath = $userpath + ";$programDir"
-[System.Environment]::SetEnvironmentVariable("PATH", $userpath, "User")
+if ($userpath.Split(";") -notcontains $programPath) {
+        $userpath = $userpath + ";$programPath"
+        [System.Environment]::SetEnvironmentVariable("PATH", $userpath, "User")
+}
 
 # Create Startmenu Shortcut
 Write-Host "Creating shortcuts for easy access..." -ForegroundColor Cyan
