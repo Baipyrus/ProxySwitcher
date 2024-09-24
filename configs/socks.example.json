@@ -1,0 +1,21 @@
+{
+    "name": "SOCKS",
+    "cmd": "[void] 'Toggle SOCKS v5'; $PRSW_ARG",
+    "set": [
+        {
+            "args": [
+                "Start-Process -FilePath 'cmd.exe' -ArgumentList '/c', 'start', 'ssh', '-D', 'PORT', '-q', '-C', '-N', '-f', 'HOST'"
+            ],
+            "type": "variable",
+            "discard": true
+        }
+    ],
+    "unset": [
+        {
+            "args": [
+                "TASKKILL /F /PID ((Get-NetTCPConnection -LocalPort 1337).OwningProcess | Select -First 1)"
+            ],
+            "type": "variable"
+        }
+    ]
+}
