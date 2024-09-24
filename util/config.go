@@ -2,6 +2,7 @@ package util
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/fs"
 	"path/filepath"
 	"strings"
@@ -47,15 +48,14 @@ func ReadConfigs(cfgPath string) ([]*Config, error) {
 	return configs, err
 }
 
-func SaveConfig(name string, config Config) error {
-	configs, _ := ReadConfigs(name)
-	configs = append(configs, &config)
-
-	data, err := json.Marshal(configs)
+func SaveConfig(cfgPath string, config Config) error {
+	data, err := json.Marshal(config)
 	if err != nil {
 		return err
 	}
 
-	err = os.WriteFile(name, data, 0666)
+	cfgName := fmt.Sprintf("%s.json", config.Name)
+	cfgFile := filepath.Join(cfgPath, cfgName)
+	err = os.WriteFile(cfgFile, data, 0666)
 	return err
 }
