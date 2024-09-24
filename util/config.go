@@ -14,7 +14,10 @@ func ReadConfigs(cfgPath string) ([]*Config, error) {
 	var configs []*Config
 
 	err := filepath.Walk(cfgPath, func(path string, info fs.FileInfo, err error) error {
-		if info.IsDir() || strings.HasSuffix(info.Name(), ".example.json") {
+		name := info.Name()
+		isExample := strings.HasSuffix(name, ".example.json")
+		notJson := !strings.HasSuffix(name, ".json")
+		if info.IsDir() || isExample || notJson {
 			return nil
 		}
 
