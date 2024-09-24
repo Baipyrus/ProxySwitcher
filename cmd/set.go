@@ -10,7 +10,7 @@ var setCmd = &cobra.Command{
 	Use:   "set",
 	Short: "Enable the current internet proxy settings",
 	Run: func(cmd *cobra.Command, args []string) {
-		proxy.Set(cfgFile)
+		proxy.Set(cfgPath)
 	},
 }
 

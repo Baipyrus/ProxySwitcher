@@ -10,7 +10,7 @@ var unsetCmd = &cobra.Command{
 	Use:   "unset",
 	Short: "Disable the current internet proxy settings",
 	Run: func(cmd *cobra.Command, args []string) {
-		proxy.Unset(cfgFile)
+		proxy.Unset(cfgPath)
 	},
 }
 

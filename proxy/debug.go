@@ -22,8 +22,8 @@ func mapCmdsToStr(commands []*util.Command) string {
 	return strings.Join(output, "\n")
 }
 
-func Debug(cfgFile string) {
-	path, _ := filepath.Abs(cfgFile)
+func Debug(cfgPath string) {
+	path, _ := filepath.Abs(cfgPath)
 	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
 		path = "[N/A]"
 	}
@@ -41,7 +41,7 @@ func Debug(cfgFile string) {
 	fmt.Printf("Enabled: %t\n", proxy.Enabled)
 	fmt.Printf("Server: %s\n\n", proxyServer)
 
-	configs, _ := util.ReadConfigs(cfgFile)
+	configs, _ := util.ReadConfigs(cfgPath)
 	for _, config := range configs {
 		configCmd := config.Name
 		// Use command instead of name, if given
