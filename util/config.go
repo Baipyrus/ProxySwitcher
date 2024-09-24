@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/fs"
 	"path/filepath"
+	"strings"
 
 	"io"
 	"os"
@@ -13,7 +14,7 @@ func ReadConfigs(cfgPath string) ([]*Config, error) {
 	var configs []*Config
 
 	err := filepath.Walk(cfgPath, func(path string, info fs.FileInfo, err error) error {
-		if info.IsDir() {
+		if info.IsDir() || strings.HasSuffix(info.Name(), ".example.json") {
 			return nil
 		}
 
