@@ -10,7 +10,7 @@ var debugCmd = &cobra.Command{
 	Use:   "debug",
 	Short: "Output all parsed configurations for debugging",
 	Run: func(cmd *cobra.Command, args []string) {
-		proxy.Debug(cfgFile)
+		proxy.Debug(cfgPath)
 	},
 }
 

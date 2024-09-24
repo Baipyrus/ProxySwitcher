@@ -2,38 +2,60 @@ package util
 
 import (
 	"encoding/json"
+	"fmt"
+	"io/fs"
+	"path/filepath"
+	"strings"
+
 	"io"
 	"os"
 )
 
-func ReadConfigs(name string) ([]*Config, error) {
-	file, err := os.Open(name)
+func ReadConfigs(cfgPath string) ([]*Config, error) {
+	var configs []*Config
 
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
+	err := filepath.Walk(cfgPath, func(path string, info fs.FileInfo, err error) error {
+		name := info.Name()
+		isExample := strings.HasSuffix(name, ".example.json")
+		notJson := !strings.HasSuffix(name, ".json")
+		if info.IsDir() || isExample || notJson {
+			return nil
+		}
 
-	bytes, _ := io.ReadAll(file)
+		file, err := os.Open(path)
 
-	var config []*Config
-	err = json.Unmarshal(bytes, &config)
+		if err != nil {
+			return nil
+		}
+		defer file.Close()
 
-	if err != nil {
-		return nil, err
-	}
-	return config, nil
+		bytes, err := io.ReadAll(file)
+		if err != nil {
+			return nil
+		}
+
+		var config *Config
+		err = json.Unmarshal(bytes, &config)
+
+		if err != nil {
+			return nil
+		}
+
+		configs = append(configs, config)
+		return nil
+	})
+
+	return configs, err
 }
 
-func SaveConfig(name string, config Config) error {
-	configs, _ := ReadConfigs(name)
-	configs = append(configs, &config)
-
-	data, err := json.Marshal(configs)
+func SaveConfig(cfgPath string, config Config) error {
+	data, err := json.Marshal(config)
 	if err != nil {
 		return err
 	}
 
-	err = os.WriteFile(name, data, 0666)
+	cfgName := fmt.Sprintf("%s.json", config.Name)
+	cfgFile := filepath.Join(cfgPath, cfgName)
+	err = os.WriteFile(cfgFile, data, 0666)
 	return err
 }

@@ -4,7 +4,7 @@ import (
 	"github.com/Baipyrus/ProxySwitcher/util"
 )
 
-func Set(cfgFile string) {
+func Set(cfgPath string) {
 	stdin, closeFunc, _ := util.ReadyCmd()
 
 	proxy, _ := ReadSystemProxy()
@@ -13,7 +13,7 @@ func Set(cfgFile string) {
 		SetSystemProxy(true)
 	}
 
-	configs, _ := util.ReadConfigs(cfgFile)
+	configs, _ := util.ReadConfigs(cfgPath)
 	for _, config := range configs {
 		configCmd := config.Name
 		// Use command instead of name, if given
