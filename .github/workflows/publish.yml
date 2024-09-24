@@ -39,7 +39,7 @@ jobs:
       run: |
           cp run.ps1 build/
           cp install.ps1 build/
-          cp configs.json build/
+          cp -r configs/ build/
           mkdir -p build/assets/
           cp -r assets/*.ico build/assets/
 
