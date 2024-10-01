@@ -9,21 +9,16 @@ import (
 	"golang.org/x/sys/windows/registry"
 )
 
-func processVars(isVariableType bool, args []string, configCmd string) ([]string, string) {
-	var configArgs []string
-
-	for _, arg := range args {
-		// If not replacable, append
-		if !isVariableType {
-			configArgs = append(configArgs, arg)
-			continue
-		}
-
-		// Replace specific "ProxySwitcher Argument" in command
-		configCmd = strings.Replace(configCmd, "$PRSW_ARG", arg, 1)
+func processVars(cmd *util.Command, isVariableType bool) {
+	// If not a variable type, return early as there's nothing to replace
+	if !isVariableType {
+		return
 	}
 
-	return configArgs, configCmd
+	// Replace specific $PRSW_ARG in the command's Name with each argument
+	for _, arg := range cmd.Arguments {
+		cmd.Name = strings.Replace(cmd.Name, "$PRSW_ARG", arg, 1)
+	}
 }
 
 func injectProxy(configArgs []string, configCmd, proxyServer string, variant *util.Variant) ([]string, string) {
@@ -68,8 +63,8 @@ func generateCommands(base string, variants []*util.Variant, proxyServer string)
 			Arguments: append([]string{}, variant.Arguments...),
 		}
 
-		configArgs, configCmd := processVars(isVariableType, cmd.Arguments, cmd.Name)
-		configArgs, configCmd = injectProxy(configArgs, configCmd, proxyServer, variant)
+		processVars(cmd, isVariableType)
+		configArgs, configCmd := injectProxy(cmd.Arguments, cmd.Name, proxyServer, variant)
 
 		commands = append(commands, &util.Command{Name: configCmd, Arguments: configArgs})
 	}
