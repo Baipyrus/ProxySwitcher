@@ -9,7 +9,7 @@ import (
 	"golang.org/x/sys/windows/registry"
 )
 
-func readArgs(replaceVariable bool, args []string, configCmd string) ([]string, string) {
+func processVars(replaceVariable bool, args []string, configCmd string) ([]string, string) {
 	var configArgs []string
 
 	for _, arg := range args {
@@ -62,7 +62,7 @@ func generateCommands(variants []*util.Variant, configCmd, proxyServer string) [
 	for _, variant := range variants {
 		replaceVariable := variant.Type == util.VARIABLE
 
-		configArgs, configCmd := readArgs(replaceVariable, variant.Arguments, configCmd)
+		configArgs, configCmd := processVars(replaceVariable, variant.Arguments, configCmd)
 		configArgs, configCmd = applyProxy(configArgs, configCmd, proxyServer, variant)
 
 		commands = append(commands, &util.Command{Name: configCmd, Arguments: configArgs})
