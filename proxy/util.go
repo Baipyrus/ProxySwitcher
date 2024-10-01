@@ -9,63 +9,63 @@ import (
 	"golang.org/x/sys/windows/registry"
 )
 
-func readArgs(replaceVariable bool, args []string, configCmd string) ([]string, string) {
-	var configArgs []string
-
-	for _, arg := range args {
-		// If not replacable, append
-		if !replaceVariable {
-			configArgs = append(configArgs, arg)
-			continue
-		}
-
-		// Replace specific "ProxySwitcher Argument" in command
-		configCmd = strings.Replace(configCmd, "$PRSW_ARG", arg, 1)
+func processVars(cmd *util.Command, isVariableType bool) {
+	// If not a variable type, return early as there's nothing to replace
+	if !isVariableType {
+		return
 	}
 
-	return configArgs, configCmd
+	// Replace specific $PRSW_ARG in the command's Name with each argument
+	for _, arg := range cmd.Arguments {
+		cmd.Name = strings.Replace(cmd.Name, "$PRSW_ARG", arg, 1)
+	}
 }
 
-func applyProxy(configArgs []string, configCmd, proxyServer string, variant *util.Variant) ([]string, string) {
-	// Skip, no proxy provided or proxy option discarded
+func injectProxy(cmd *util.Command, variant *util.Variant, proxyServer string) {
+	// Skip if no proxy is provided or proxy option is discarded
 	if proxyServer == "" || variant.DiscardProxy {
-		return configArgs, configCmd
+		return
 	}
 
-	// Surround 'proxyServer' with any given string, if provided
+	// Surround 'proxyServer' with the provided surround string, if any
 	if variant.Surround != "" {
 		proxyServer = fmt.Sprintf("%[1]s%[2]s%[1]s", variant.Surround, proxyServer)
 	}
 
-	// Insert proxy only on last VARIABLE type
-	if variant.Type == util.VARIABLE && strings.Count(configCmd, "$PRSW_ARG") == 1 {
-		configCmd = strings.Replace(configCmd, "$PRSW_ARG", proxyServer, 1)
-		return configArgs, configCmd
+	// Insert proxy into last place of command if the variant is VARIABLE
+	if variant.Type == util.VARIABLE && strings.Count(cmd.Name, "$PRSW_ARG") == 1 {
+		cmd.Name = strings.Replace(cmd.Name, "$PRSW_ARG", proxyServer, 1)
+		return
 	}
 
-	// Insert proxy right after equator
+	// Insert proxy after the equator if specified
 	if variant.Equator != "" {
-		configArgs[len(configArgs)-1] += variant.Equator + proxyServer
-		return configArgs, configCmd
+		lastArgIdx := len(cmd.Arguments) - 1
+		cmd.Arguments[lastArgIdx] += variant.Equator + proxyServer
+		return
 	}
 
-	// Or otherwise just append it as an argument
-	configArgs = append(configArgs, proxyServer)
-
-	return configArgs, configCmd
+	// Otherwise, append the proxy as a new argument
+	cmd.Arguments = append(cmd.Arguments, proxyServer)
 }
 
-func generateCommands(variants []*util.Variant, configCmd, proxyServer string) []*util.Command {
+func generateCommands(base string, variants []*util.Variant, proxyServer string) []*util.Command {
 	var commands []*util.Command
 
-	// Generate one command per variant
+	// Iterate through all variants and generate a command for each
 	for _, variant := range variants {
-		replaceVariable := variant.Type == util.VARIABLE
+		isVariableType := variant.Type == util.VARIABLE
 
-		configArgs, configCmd := readArgs(replaceVariable, variant.Arguments, configCmd)
-		configArgs, configCmd = applyProxy(configArgs, configCmd, proxyServer, variant)
+		// Create command from default parameters
+		cmd := &util.Command{
+			Name:      base,
+			Arguments: append([]string{}, variant.Arguments...),
+		}
 
-		commands = append(commands, &util.Command{Name: configCmd, Arguments: configArgs})
+		processVars(cmd, isVariableType)
+		injectProxy(cmd, variant, proxyServer)
+
+		commands = append(commands, cmd)
 	}
 
 	return commands

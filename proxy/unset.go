@@ -21,7 +21,7 @@ func Unset(cfgPath string) {
 			configCmd = config.Cmd
 		}
 
-		commands := generateCommands(config.Unset, configCmd, "")
+		commands := generateCommands(configCmd, config.Unset, "")
 		util.ExecCmds(commands, stdin)
 	}
 
