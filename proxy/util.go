@@ -9,12 +9,12 @@ import (
 	"golang.org/x/sys/windows/registry"
 )
 
-func processVars(replaceVariable bool, args []string, configCmd string) ([]string, string) {
+func processVars(isVariableType bool, args []string, configCmd string) ([]string, string) {
 	var configArgs []string
 
 	for _, arg := range args {
 		// If not replacable, append
-		if !replaceVariable {
+		if !isVariableType {
 			configArgs = append(configArgs, arg)
 			continue
 		}
@@ -60,9 +60,9 @@ func generateCommands(variants []*util.Variant, configCmd, proxyServer string) [
 
 	// Generate one command per variant
 	for _, variant := range variants {
-		replaceVariable := variant.Type == util.VARIABLE
+		isVariableType := variant.Type == util.VARIABLE
 
-		configArgs, configCmd := processVars(replaceVariable, variant.Arguments, configCmd)
+		configArgs, configCmd := processVars(isVariableType, variant.Arguments, configCmd)
 		configArgs, configCmd = injectProxy(configArgs, configCmd, proxyServer, variant)
 
 		commands = append(commands, &util.Command{Name: configCmd, Arguments: configArgs})
