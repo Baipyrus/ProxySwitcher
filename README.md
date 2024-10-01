@@ -32,10 +32,13 @@ irm 'https://raw.githubusercontent.com/Baipyrus/ProxySwitcher/main/install.ps1' 
 
 Generally, the [Installation](#installation) step will install both the program,
 its assets, and a shortcut for the Windows Startmenu for your current userprofile.
-You *could* go into the program directory (`C:\Users\[Username]\AppData\Local\Programs\ProxySwitcher\`)
-manually and run the program from your CLI in there, but it is recommended to simply
-use the program in system tray or directly via code. This latter option will be explained
-next:
+Additionally, the program will also be added to the user's `%PATH%` Variable and
+will this be executable from within the command-line. However, you will either need
+to navigate into the program directory (`C:\Users\[Username]\AppData\Local\Programs\ProxySwitcher\`)
+manually or specify a path to any directory containing configuration files using
+the flag `-c, --configs string   configurations path (default "configs/")`.
+To keep it simple, it is still recommended to use the program in system tray or
+directly via code. This latter option will be explained next:
 
 - Clone the repository:
 
@@ -48,26 +51,38 @@ next:
 - **set**: Enable all saved proxies including system proxy.
 
     ```powersell
+    # .\ProxySwitcher.exe set
     go run . set
     ```
 
 - **unset**: Disable all saved proxies including system proxy.
 
     ```powersell
+    # .\ProxySwitcher.exe unset
     go run . unset
     ```
 
 - **save**: Saves a new configuration to set a proxy for.
 
     ```powersell
+    # .\ProxySwitcher.exe save
+    go run . save
+    ```
+
+- **debug**: Prints all proxy configurations after generating corresponding commands.
+
+    ```powersell
+    # .\ProxySwitcher.exe debug
     go run . save
     ```
 
 ### Configuration
 
-The programs for which the proxy settings should be managed are stored in a `configs.json`
-file, which can be modified directly or through the `save` command. For examples,
-please take a look at the [default config](./configs.json) or at the following block:
+The programs for which the proxy settings should be managed are stored in [`configs/`](https://github.com/Baipyrus/ProxySwitcher/tree/main/configs),
+wherein you can then create a JSON file per command group. These files can easily
+be modified directly or generated through the `save` command. For examples,
+please take a look at the [default config](https://github.com/Baipyrus/ProxySwitcher/tree/main/configs)
+or at the following block:
 
 ```js
 [
