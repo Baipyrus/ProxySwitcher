@@ -21,33 +21,32 @@ func processVars(cmd *util.Command, isVariableType bool) {
 	}
 }
 
-func injectProxy(configArgs []string, configCmd, proxyServer string, variant *util.Variant) ([]string, string) {
-	// Skip, no proxy provided or proxy option discarded
+func injectProxy(cmd *util.Command, variant *util.Variant, proxyServer string) {
+	// Skip if no proxy is provided or proxy option is discarded
 	if proxyServer == "" || variant.DiscardProxy {
-		return configArgs, configCmd
+		return
 	}
 
-	// Surround 'proxyServer' with any given string, if provided
+	// Surround 'proxyServer' with the provided surround string, if any
 	if variant.Surround != "" {
 		proxyServer = fmt.Sprintf("%[1]s%[2]s%[1]s", variant.Surround, proxyServer)
 	}
 
-	// Insert proxy only on last VARIABLE type
-	if variant.Type == util.VARIABLE && strings.Count(configCmd, "$PRSW_ARG") == 1 {
-		configCmd = strings.Replace(configCmd, "$PRSW_ARG", proxyServer, 1)
-		return configArgs, configCmd
+	// Insert proxy into last place of command if the variant is VARIABLE
+	if variant.Type == util.VARIABLE && strings.Count(cmd.Name, "$PRSW_ARG") == 1 {
+		cmd.Name = strings.Replace(cmd.Name, "$PRSW_ARG", proxyServer, 1)
+		return
 	}
 
-	// Insert proxy right after equator
+	// Insert proxy after the equator if specified
 	if variant.Equator != "" {
-		configArgs[len(configArgs)-1] += variant.Equator + proxyServer
-		return configArgs, configCmd
+		lastArgIdx := len(cmd.Arguments) - 1
+		cmd.Arguments[lastArgIdx] += variant.Equator + proxyServer
+		return
 	}
 
-	// Or otherwise just append it as an argument
-	configArgs = append(configArgs, proxyServer)
-
-	return configArgs, configCmd
+	// Otherwise, append the proxy as a new argument
+	cmd.Arguments = append(cmd.Arguments, proxyServer)
 }
 
 func generateCommands(base string, variants []*util.Variant, proxyServer string) []*util.Command {
@@ -64,9 +63,9 @@ func generateCommands(base string, variants []*util.Variant, proxyServer string)
 		}
 
 		processVars(cmd, isVariableType)
-		configArgs, configCmd := injectProxy(cmd.Arguments, cmd.Name, proxyServer, variant)
+		injectProxy(cmd, variant, proxyServer)
 
-		commands = append(commands, &util.Command{Name: configCmd, Arguments: configArgs})
+		commands = append(commands, cmd)
 	}
 
 	return commands
