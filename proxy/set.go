@@ -21,7 +21,7 @@ func Set(cfgPath string) {
 			configCmd = config.Cmd
 		}
 
-		commands := generateCommands(config.Set, configCmd, proxy.Server)
+		commands := generateCommands(configCmd, config.Set, proxy.Server)
 		util.ExecCmds(commands, stdin)
 	}
 

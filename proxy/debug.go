@@ -51,12 +51,12 @@ func Debug(cfgPath string) {
 		fmt.Printf("Loading commands for '%s':\n", config.Name)
 
 		// Debug Proxy Set Commands
-		setCmds := generateCommands(config.Set, configCmd, "[PROXY PLACEHOLDER]")
+		setCmds := generateCommands(configCmd, config.Set, "[PROXY PLACEHOLDER]")
 		fmt.Println("Set Commands:")
 		fmt.Printf("%s\n", mapCmdsToStr(setCmds))
 
 		// Debug Proxy Unset Commands
-		unsetCmds := generateCommands(config.Unset, configCmd, "")
+		unsetCmds := generateCommands(configCmd, config.Unset, "")
 		fmt.Println("Unset Commands:")
 		fmt.Printf("%s\n\n", mapCmdsToStr(unsetCmds))
 	}

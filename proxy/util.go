@@ -55,14 +55,20 @@ func injectProxy(configArgs []string, configCmd, proxyServer string, variant *ut
 	return configArgs, configCmd
 }
 
-func generateCommands(variants []*util.Variant, configCmd, proxyServer string) []*util.Command {
+func generateCommands(base string, variants []*util.Variant, proxyServer string) []*util.Command {
 	var commands []*util.Command
 
-	// Generate one command per variant
+	// Iterate through all variants and generate a command for each
 	for _, variant := range variants {
 		isVariableType := variant.Type == util.VARIABLE
 
-		configArgs, configCmd := processVars(isVariableType, variant.Arguments, configCmd)
+		// Create command from default parameters
+		cmd := &util.Command{
+			Name:      base,
+			Arguments: append([]string{}, variant.Arguments...),
+		}
+
+		configArgs, configCmd := processVars(isVariableType, cmd.Arguments, cmd.Name)
 		configArgs, configCmd = injectProxy(configArgs, configCmd, proxyServer, variant)
 
 		commands = append(commands, &util.Command{Name: configCmd, Arguments: configArgs})
