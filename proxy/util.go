@@ -26,7 +26,7 @@ func processVars(replaceVariable bool, args []string, configCmd string) ([]strin
 	return configArgs, configCmd
 }
 
-func applyProxy(configArgs []string, configCmd, proxyServer string, variant *util.Variant) ([]string, string) {
+func injectProxy(configArgs []string, configCmd, proxyServer string, variant *util.Variant) ([]string, string) {
 	// Skip, no proxy provided or proxy option discarded
 	if proxyServer == "" || variant.DiscardProxy {
 		return configArgs, configCmd
@@ -63,7 +63,7 @@ func generateCommands(variants []*util.Variant, configCmd, proxyServer string) [
 		replaceVariable := variant.Type == util.VARIABLE
 
 		configArgs, configCmd := processVars(replaceVariable, variant.Arguments, configCmd)
-		configArgs, configCmd = applyProxy(configArgs, configCmd, proxyServer, variant)
+		configArgs, configCmd = injectProxy(configArgs, configCmd, proxyServer, variant)
 
 		commands = append(commands, &util.Command{Name: configCmd, Arguments: configArgs})
 	}
