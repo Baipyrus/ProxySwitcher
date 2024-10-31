@@ -21,6 +21,8 @@ func processVars(cmd *util.Command, isVariableType bool) {
 	for _, arg := range cmd.Arguments {
 		cmd.Name = strings.Replace(cmd.Name, "$PRSW_ARG", arg, 1)
 	}
+
+	cmd.Arguments = nil
 }
 
 func injectProxy(cmd *util.Command, variant *util.Variant, proxyServer string) {
