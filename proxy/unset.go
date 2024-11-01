@@ -3,18 +3,19 @@
 package proxy
 
 import (
+	"log"
+
 	"github.com/Baipyrus/ProxySwitcher/util"
 )
 
 func Unset(cfgPath string) {
-	stdin, closeFunc, _ := util.ReadyCmd()
-
 	proxy, _ := ReadSystemProxy()
 	// Unset system proxy, if not already
 	if proxy.Enabled {
 		SetSystemProxy(false)
 	}
 
+	var failed bool
 	configs, _ := util.ReadConfigs(cfgPath)
 	for _, config := range configs {
 		configCmd := config.Name
@@ -24,8 +25,11 @@ func Unset(cfgPath string) {
 		}
 
 		commands := generateCommands(configCmd, config.Unset, "")
-		util.ExecCmds(commands, stdin)
+		failed = util.ExecCmds(commands)
 	}
 
-	closeFunc()
+	// Additional feedback on error
+	if failed {
+		log.Printf("One or more commands failed to execute. Run command 'debug' to see more.\n")
+	}
 }
