@@ -5,6 +5,7 @@ package proxy
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -33,9 +34,11 @@ func Debug(cfgPath string) {
 	fmt.Printf("\nConfig:\n")
 	fmt.Printf("%s\n\n", path)
 
-	proxy, _ := ReadSystemProxy()
+	proxy, err := ReadSystemProxy()
 	proxyServer := proxy.Server
-	if proxyServer == "" {
+	if err != nil {
+		log.Fatal(err)
+	} else if proxyServer == "" {
 		proxyServer = "[N/A]"
 	}
 
@@ -43,7 +46,11 @@ func Debug(cfgPath string) {
 	fmt.Printf("Enabled: %t\n", proxy.Enabled)
 	fmt.Printf("Server: %s\n\n", proxyServer)
 
-	configs, _ := util.ReadConfigs(cfgPath)
+	configs, err := util.ReadConfigs(cfgPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	for _, config := range configs {
 		configCmd := config.Name
 		// Use command instead of name, if given
