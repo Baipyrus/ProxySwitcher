@@ -1,0 +1,22 @@
+{
+    "name": "WSL - User - Pip",
+    "cmd": "wsl pip",
+    "set": [
+        {
+            "args": [
+                "config",
+                "set",
+                "global.proxy"
+            ]
+        }
+    ],
+    "unset": [
+        {
+            "args": [
+                "config",
+                "unset",
+                "global.proxy"
+            ]
+        }
+    ]
+}

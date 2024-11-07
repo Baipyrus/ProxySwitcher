@@ -1,0 +1,36 @@
+{
+    "name": "WSL - User - Git",
+    "cmd": "wsl git",
+    "set": [
+        {
+            "args": [
+                "config",
+                "--global",
+                "http.proxy"
+            ]
+        }, {
+            "args": [
+                "config",
+                "--global",
+                "https.proxy"
+            ]
+        }
+    ],
+    "unset": [
+        {
+            "args": [
+                "config",
+                "--global",
+                "--unset",
+                "http.proxy"
+            ]
+        }, {
+            "args": [
+                "config",
+                "--global",
+                "--unset",
+                "https.proxy"
+            ]
+        }
+    ]
+}
