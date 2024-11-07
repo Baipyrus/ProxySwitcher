@@ -1,5 +1,5 @@
 {
-    "name": "env",
+    "name": "WIN - Env",
     "cmd": "[System.Environment]::SetEnvironmentVariable('$PRSW_ARG', $PRSW_ARG, 'User')",
     "set": [
         {

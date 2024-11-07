@@ -1,5 +1,6 @@
 {
-    "name": "npm",
+    "name": "WIN - NPM",
+    "cmd": "npm",
     "set": [
         {
             "args": [

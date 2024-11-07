@@ -1,5 +1,6 @@
 {
-    "name": "pip",
+    "name": "WIN - Pip",
+    "cmd": "pip",
     "set": [
         {
             "args": [
