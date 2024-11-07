@@ -1,0 +1,36 @@
+{
+    "name": "WSL - Sudo - NPM",
+    "cmd": "wsl sudo npm",
+    "set": [
+        {
+            "args": [
+                "config",
+                "set",
+                "proxy"
+            ],
+            "equator": "="
+        }, {
+            "args": [
+                "config",
+                "set",
+                "https-proxy"
+            ],
+            "equator": "="
+        }
+    ],
+    "unset": [
+        {
+            "args": [
+                "config",
+                "delete",
+                "proxy"
+            ]
+        }, {
+            "args": [
+                "config",
+                "delete",
+                "https-proxy"
+            ]
+        }
+    ]
+}
