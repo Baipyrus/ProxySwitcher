@@ -41,7 +41,7 @@ jobs:
     # Required build flags for this project
     env:
       GOOS: windows
-      GOARCH: amd64 
+      GOARCH: amd64
 
     strategy:
       fail-fast: false
