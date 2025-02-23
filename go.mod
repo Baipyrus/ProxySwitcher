@@ -5,9 +5,9 @@ go 1.23.3
 toolchain go1.23.6
 
 require (
+	github.com/AllenDang/giu v0.12.0
 	github.com/spf13/cobra v1.9.1
 	golang.org/x/sys v0.30.0
-	github.com/AllenDang/giu v0.12.0
 )
 
 require (
