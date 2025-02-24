@@ -88,8 +88,8 @@ jobs:
       shell: bash
       run: |
         # Install dependencies
-        apt-get update
-        apt-get install -y gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
+        sudo apt-get update
+        sudo apt-get install -y gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
         go get .
         # Build Project
         go build -ldflags "-s -w -H=windowsgui -extldflags=-static" -p 4 -v

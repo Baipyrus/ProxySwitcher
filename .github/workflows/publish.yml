@@ -35,8 +35,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          apt-get update
-          apt-get install -y gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
+          sudo apt-get update
+          sudo apt-get install -y gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
           go get .
 
       - name: Build project
