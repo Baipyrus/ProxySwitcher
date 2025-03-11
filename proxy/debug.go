@@ -34,7 +34,7 @@ func Debug(cfgPath string) {
 	fmt.Printf("\nConfig:\n")
 	fmt.Printf("%s\n\n", path)
 
-	proxy, err := ReadSystemProxy()
+	proxy, err := readSystemProxy()
 	proxyServer := proxy.Server
 	if err != nil {
 		log.Fatal(err)

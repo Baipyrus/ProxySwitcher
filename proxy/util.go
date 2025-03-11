@@ -75,7 +75,7 @@ func generateCommands(base string, variants []*util.Variant, proxyServer string)
 	return commands
 }
 
-func ReadSystemProxy() (*Proxy, error) {
+func readSystemProxy() (*Proxy, error) {
 	// Open registry key for internet settings
 	key, err := registry.OpenKey(registry.CURRENT_USER, `Software\Microsoft\Windows\CurrentVersion\Internet Settings`, registry.QUERY_VALUE)
 	if err != nil {
@@ -129,7 +129,7 @@ func ReadSystemProxy() (*Proxy, error) {
 	return proxy, nil
 }
 
-func SetSystemProxy(state bool) error {
+func setSystemProxy(state bool) error {
 	// Open registry key for internet settings
 	key, err := registry.OpenKey(registry.CURRENT_USER, `Software\Microsoft\Windows\CurrentVersion\Internet Settings`, registry.SET_VALUE)
 	if err != nil {
