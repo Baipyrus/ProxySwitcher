@@ -45,7 +45,7 @@ if ($isRelease)
 
         # Download release files from github as-is
         Write-Host "Downloading program into local directory..." -ForegroundColor Cyan
-        $releases = Invoke-RestMethod "https://api.github.com/repos/Baipyrus/ProxySwitcher/releases"
+        $releases = Invoke-RestMethod "https://api.github.com/repos/Baipyrus/ProxySwitcher/releases/latest"
         $assets = $releases[0].assets
         $archive = $assets | Where-Object name -match "zip"
         Invoke-RestMethod $archive.browser_download_url -OutFile $tmpPRSWzip
