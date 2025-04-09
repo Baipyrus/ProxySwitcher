@@ -49,14 +49,15 @@ if ($isRelease)
         $assets = $releases[0].assets
         $archive = $assets | Where-Object name -match "zip"
         Invoke-RestMethod $archive.browser_download_url -OutFile $tmpPRSWzip
-        
+
         # Expand Archive to program directory
         Expand-Archive $tmpPRSWzip -DestinationPath $programPath -Force
 }
 
 # Add program to PATH for cli application
 $userpath = [System.Environment]::GetEnvironmentVariable("PATH", "User")
-if ($userpath.Split(";") -notcontains $programPath) {
+if ($userpath.Split(";") -notcontains $programPath)
+{
         $userpath = $userpath + ";$programPath"
         [System.Environment]::SetEnvironmentVariable("PATH", $userpath, "User")
 }
