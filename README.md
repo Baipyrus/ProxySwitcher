@@ -47,7 +47,7 @@ In case you want to run the code directly:
 
 - Clone the repository:
 
-    ```powersell
+    ```powershell
     git clone https://github.com/Baipyrus/ProxySwitcher.git
     ```
 
@@ -55,28 +55,28 @@ In case you want to run the code directly:
 
 - **set**: Enable all saved proxies including system proxy.
 
-    ```powersell
+    ```powershell
     # ProxySwitcher.exe set
     go run . set
     ```
 
 - **unset**: Disable all saved proxies including system proxy.
 
-    ```powersell
+    ```powershell
     # ProxySwitcher.exe unset
     go run . unset
     ```
 
 - **save**: Saves a new configuration to set a proxy for.
 
-    ```powersell
+    ```powershell
     # ProxySwitcher.exe save
     go run . save
     ```
 
 - **debug**: Prints all proxy configurations after generating corresponding commands.
 
-    ```powersell
+    ```powershell
     # ProxySwitcher.exe debug
     go run . save
     ```
