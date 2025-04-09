@@ -54,6 +54,9 @@ if ($isRelease)
         Expand-Archive $tmpPRSWzip -DestinationPath $programPath -Force
 }
 
+# Unblock any files after download, if necessary
+Get-ChildItem $programPath | Unblock-File
+
 # Add program to PATH for cli application
 $userpath = [System.Environment]::GetEnvironmentVariable("PATH", "User")
 if ($userpath.Split(";") -notcontains $programPath)
