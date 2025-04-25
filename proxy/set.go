@@ -1,5 +1,3 @@
-//go:build windows
-
 package proxy
 
 import (
@@ -9,10 +7,10 @@ import (
 )
 
 func Set(cfgPath string) {
-	proxy, _ := ReadSystemProxy()
+	proxy, _ := readSystemProxy()
 	// Set system proxy, if not already
 	if !proxy.Enabled {
-		SetSystemProxy(true)
+		setSystemProxy(true)
 	}
 
 	var failed bool

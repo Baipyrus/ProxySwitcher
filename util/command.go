@@ -1,11 +1,8 @@
-//go:build windows
-
 package util
 
 import (
 	"fmt"
 	"log"
-	"os/exec"
 	"strings"
 )
 
@@ -21,7 +18,7 @@ func ExecCmds(commands []*Command) bool {
 		}
 
 		// Try executing command in default shell
-		cmd := exec.Command("powershell", "-NoLogo", "-NoProfile", "-Command", cmdStr)
+		cmd := execShell(cmdStr)
 		if err := cmd.Run(); err != nil {
 			log.Printf("Command '%s' failed!\n", cmdStr)
 			failed = true
