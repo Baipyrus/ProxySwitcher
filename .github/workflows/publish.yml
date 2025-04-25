@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: archlinux-latest
 
     env:
       GOOS: windows
@@ -19,7 +19,6 @@ jobs:
       CGO_ENABLED: 1
       CC: x86_64-w64-mingw32-gcc
       CXX: x86_64-w64-mingw32-g++
-      HOST: x86_64-w64-mingw32
 
     steps:
       - name: Checkout repository
@@ -35,12 +34,14 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
+          sudo pacman -Syu --noconfirm \
+            go mingw-w64-gcc \
+            mingw-w64-winpthreads \
+            mingw-w64-headers
           go mod download
 
       - name: Build project
-        run: go build -ldflags "-s -w -H=windowsgui -extldflags=-static" -p 4 -v -o build/
+        run: go build -v -o build/
 
       - name: Copying skripts and assets
         run: |
