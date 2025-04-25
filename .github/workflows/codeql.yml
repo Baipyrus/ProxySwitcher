@@ -45,7 +45,6 @@ jobs:
       CGO_ENABLED: 1
       CC: x86_64-w64-mingw32-gcc
       CXX: x86_64-w64-mingw32-g++
-      HOST: x86_64-w64-mingw32 
 
     strategy:
       fail-fast: false
@@ -85,12 +84,13 @@ jobs:
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
     - if: matrix.build-mode == 'manual'
+      name: Build project
       shell: bash
       run: |
         # Install dependencies
         sudo apt-get update
         sudo apt-get install -y gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
-        go get .
+        go mod download
         # Build Project
         go build -ldflags "-s -w -H=windowsgui -extldflags=-static" -p 4 -v
 
