@@ -16,73 +16,80 @@ jobs:
     env:
       GOOS: windows
       GOARCH: amd64 
+      CGO_ENABLED: 1
+      CC: x86_64-w64-mingw32-gcc
+      CXX: x86_64-w64-mingw32-g++
+      HOST: x86_64-w64-mingw32 
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Get GoLang version
-      run: sed -En 's/^go (.*)$/GO_VERSION=\1/p' go.mod >> $GITHUB_ENV
-    
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
+      - name: Get GoLang version
+        run: sed -En 's/^go (.*)$/GO_VERSION=\1/p' go.mod >> $GITHUB_ENV
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
           go-version: "${{ env.GO_VERSION }}"
 
-    - name: Install dependencies
-      run: go get .
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
+          go get .
 
-    - name: Build project
-      run: go build -o build/ -v ./...
+      - name: Build project
+        run: go build -ldflags "-s -w -H=windowsgui -extldflags=-static" -p 4 -v -o build/
 
-    - name: Copying skripts and assets
-      run: |
+      - name: Copying skripts and assets
+        run: |
           cp run.ps1 build/
           cp install.ps1 build/
           cp -r configs/ build/
           mkdir -p build/assets/
           cp -r assets/*.ico build/assets/
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: ProxySwitcher
-        path: build/
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ProxySwitcher
+          path: build/
 
   release:
     runs-on: ubuntu-latest
     needs: build
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Download artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: ProxySwitcher
-        path: artifacts/
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ProxySwitcher
+          path: artifacts/
 
-    - name: Zip artifacts for release
-      run: |
-        cd artifacts/
-        zip -r ../ProxySwitcher.zip *
+      - name: Zip artifacts for release
+        run: |
+          cd artifacts/
+          zip -r ../ProxySwitcher.zip *
 
-    - name: Create release
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        RELEASE_NAME: ${{ github.ref_name }}
-      run: |
-        # If the release name starts with "pre", draft release
-        FLAGS=()
-        TITLE="Release $RELEASE_NAME"
-        if [[ "$RELEASE_NAME" == pre* ]]; then
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_NAME: ${{ github.ref_name }}
+        run: |
+          # If the release name starts with "pre", draft release
+          FLAGS=()
+          TITLE="Release $RELEASE_NAME"
+          if [[ "$RELEASE_NAME" == pre* ]]; then
           FLAGS+=(--prerelease --draft)
           TITLE="Prerelease $RELEASE_NAME"
-        fi
+          fi
 
-        # Create the release with the appropriate flags
-        gh release create "$RELEASE_NAME" \
+          # Create the release with the appropriate flags
+          gh release create "$RELEASE_NAME" \
           --title "$TITLE" \
           "${FLAGS[@]}" \
           ProxySwitcher.zip
