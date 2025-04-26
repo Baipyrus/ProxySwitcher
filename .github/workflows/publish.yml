@@ -11,7 +11,9 @@ on:
 
 jobs:
   build:
-    runs-on: 'archlinux-latest'
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
 
     env:
       GOOS: windows
