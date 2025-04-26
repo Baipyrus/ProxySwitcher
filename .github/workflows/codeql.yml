@@ -92,7 +92,7 @@ jobs:
       shell: bash
       run: |
         # Install dependencies
-        sudo pacman -Syu --noconfirm \
+        pacman -Syu --noconfirm \
           go mingw-w64-gcc \
           mingw-w64-winpthreads \
           mingw-w64-headers
