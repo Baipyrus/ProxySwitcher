@@ -18,6 +18,7 @@ jobs:
     env:
       GOOS: windows
       GOARCH: amd64
+      LD_PRELOAD: ''
       CGO_ENABLED: 1
       CC: x86_64-w64-mingw32-gcc
       CXX: x86_64-w64-mingw32-g++

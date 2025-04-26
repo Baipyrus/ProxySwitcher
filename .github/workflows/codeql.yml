@@ -41,10 +41,12 @@ jobs:
       # only required for workflows in private repositories
       actions: read
       contents: read
+
     # Required build flags for this project
     env:
       GOOS: windows
       GOARCH: amd64
+      LD_PRELOAD: ''
       CGO_ENABLED: 1
       CC: x86_64-w64-mingw32-gcc
       CXX: x86_64-w64-mingw32-g++
