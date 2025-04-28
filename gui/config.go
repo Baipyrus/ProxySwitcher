@@ -88,10 +88,46 @@ func parseCategories(cfgPath string) map[string][]string {
 	return cats
 }
 
+func buildNode(cats map[string][]string, nodes map[string]*g.TreeTableRowWidget, path string) *g.TreeTableRowWidget {
+	// Base case: Node already linked correctly
+	// SHOULD never occur for Proxy Switcher
+	if node, ok := nodes[path]; ok {
+		return node
+	}
+
+	// Use last part as node name
+	parts := strings.Split(path, " - ")
+	name := parts[len(parts)-1]
+	node := g.TreeTableRow(name)
+	nodes[path] = node
+
+	if children, ok := cats[path]; ok {
+		// Gather child nodes recursively
+		var childNodes []*g.TreeTableRowWidget
+
+		for _, child := range children {
+			// Prepend path to child name for recursion
+			childNodes = append(childNodes, buildNode(
+				cats,
+				nodes,
+				path+" - "+child,
+			))
+		}
+
+		node.Children(childNodes...)
+	}
+
+	return node
+}
+
 func generateTree(cfgPath string) (tree []*g.TreeTableRowWidget) {
 	cats := parseCategories(cfgPath)
 
 	// Map tree by recursively getting nodes from categories
+	nodes := make(map[string]*g.TreeTableRowWidget)
+	for _, path := range cats[""] {
+		tree = append(tree, buildNode(cats, nodes, path))
+	}
 
 	return tree
 }
