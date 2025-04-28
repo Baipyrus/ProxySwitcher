@@ -89,7 +89,7 @@ func parseCategories(cfgPath string) map[string][]string {
 	return cats
 }
 
-func buildNode(cats map[string][]string, nodes map[string]*g.TreeNodeWidget, path string) *g.TreeNodeWidget {
+func buildNode(cats map[string][]string, nodes map[string]g.Widget, path string) g.Widget {
 	// Base case: Node already linked correctly
 	// SHOULD never occur for Proxy Switcher
 	if node, ok := nodes[path]; ok {
@@ -99,10 +99,14 @@ func buildNode(cats map[string][]string, nodes map[string]*g.TreeNodeWidget, pat
 	// Use last part as node name
 	parts := strings.Split(path, " - ")
 	name := parts[len(parts)-1]
-	node := g.TreeNode(name)
-	nodes[path] = node
 
+	// If this is a category, set frame and arrow
 	if children, ok := cats[path]; ok {
+		node := g.
+			TreeNode(name).
+			Flags(g.TreeNodeFlagsFramed)
+		nodes[path] = node
+
 		// Gather child nodes recursively
 		var childNodes []g.Widget
 
@@ -116,7 +120,18 @@ func buildNode(cats map[string][]string, nodes map[string]*g.TreeNodeWidget, pat
 		}
 
 		node.Layout(childNodes...)
+		return node
 	}
+
+	// If this is a leaf, create selectable element
+	node := g.
+		Tooltip("Double click to edit config").
+		To(g.
+			Selectable(name).
+			OnDClick(func() {
+			}),
+		)
+	nodes[path] = node
 
 	return node
 }
@@ -125,7 +140,7 @@ func generateTree(cfgPath string) (tree []g.Widget) {
 	cats := parseCategories(cfgPath)
 
 	// Map tree by recursively getting nodes from categories
-	nodes := make(map[string]*g.TreeNodeWidget)
+	nodes := make(map[string]g.Widget)
 	for _, path := range cats[""] {
 		tree = append(tree, buildNode(cats, nodes, path))
 	}
