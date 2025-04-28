@@ -12,7 +12,7 @@ var configCmd = &cobra.Command{
 	Use:   "config",
 	Short: "A brief description of your command",
 	Run: func(cmd *cobra.Command, args []string) {
-		gui.Config()
+		gui.Config(cfgPath)
 	},
 }
 

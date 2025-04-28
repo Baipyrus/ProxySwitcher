@@ -13,7 +13,7 @@ var (
 	port      int32
 )
 
-func config_window() {
+func configWindow(cfgPath string) {
 	g.SingleWindow().Layout(
 		g.Align(g.AlignCenter).To(
 			g.Label("Proxy Server"),
@@ -30,12 +30,18 @@ func config_window() {
 			g.Label("Port:    "),
 			g.InputInt(&port),
 		),
+		g.Align(g.AlignCenter).To(
+			g.Label("Configurations"),
+		),
 	)
 }
 
-func Config() {
-	title := "Proxy Switcher - Config"
-	wnd := g.NewMasterWindow(title, 400, 200, g.MasterWindowFlagsNotResizable)
 
-	wnd.Run(config_window)
+
+func Config(cfgPath string) {
+	title := "Proxy Switcher - Config"
+	wnd := g.NewMasterWindow(title, 600, 400, 0)
+	wnd.Run(func() {
+		configWindow(cfgPath)
+	})
 }
