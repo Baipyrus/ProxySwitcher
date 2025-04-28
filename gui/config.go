@@ -19,28 +19,29 @@ var (
 
 func configWindow(cfgPath string) {
 	g.SingleWindow().Layout(
-		g.Align(g.AlignCenter).To(
-			g.Label("Proxy Server"),
-		),
-		g.Row(
-			g.Label("Protocol:"),
-			g.Combo("", protocols[selection], protocols, &selection),
-		),
-		g.Row(
-			g.Label("Host:    "),
-			g.InputText(&host),
-		),
-		g.Row(
-			g.Label("Port:    "),
-			g.InputInt(&port),
-		),
-		g.Align(g.AlignCenter).To(
-			g.Label("Configurations"),
-		),
-		g.TreeTable().
-			Columns(g.TableColumn("Categories")).
-			Rows(generateTree(cfgPath)...).
-			Size(g.Auto, g.Auto),
+		append(
+			[]g.Widget{
+				g.Align(g.AlignCenter).To(
+					g.Label("Proxy Server"),
+				),
+				g.Row(
+					g.Label("Protocol:"),
+					g.Combo("", protocols[selection], protocols, &selection),
+				),
+				g.Row(
+					g.Label("Host:    "),
+					g.InputText(&host),
+				),
+				g.Row(
+					g.Label("Port:    "),
+					g.InputInt(&port),
+				),
+				g.Align(g.AlignCenter).To(
+					g.Label("Configurations"),
+				),
+			},
+			generateTree(cfgPath)...,
+		)...,
 	)
 }
 
@@ -88,7 +89,7 @@ func parseCategories(cfgPath string) map[string][]string {
 	return cats
 }
 
-func buildNode(cats map[string][]string, nodes map[string]*g.TreeTableRowWidget, path string) *g.TreeTableRowWidget {
+func buildNode(cats map[string][]string, nodes map[string]*g.TreeNodeWidget, path string) *g.TreeNodeWidget {
 	// Base case: Node already linked correctly
 	// SHOULD never occur for Proxy Switcher
 	if node, ok := nodes[path]; ok {
@@ -98,12 +99,12 @@ func buildNode(cats map[string][]string, nodes map[string]*g.TreeTableRowWidget,
 	// Use last part as node name
 	parts := strings.Split(path, " - ")
 	name := parts[len(parts)-1]
-	node := g.TreeTableRow(name)
+	node := g.TreeNode(name)
 	nodes[path] = node
 
 	if children, ok := cats[path]; ok {
 		// Gather child nodes recursively
-		var childNodes []*g.TreeTableRowWidget
+		var childNodes []g.Widget
 
 		for _, child := range children {
 			// Prepend path to child name for recursion
@@ -114,17 +115,17 @@ func buildNode(cats map[string][]string, nodes map[string]*g.TreeTableRowWidget,
 			))
 		}
 
-		node.Children(childNodes...)
+		node.Layout(childNodes...)
 	}
 
 	return node
 }
 
-func generateTree(cfgPath string) (tree []*g.TreeTableRowWidget) {
+func generateTree(cfgPath string) (tree []g.Widget) {
 	cats := parseCategories(cfgPath)
 
 	// Map tree by recursively getting nodes from categories
-	nodes := make(map[string]*g.TreeTableRowWidget)
+	nodes := make(map[string]*g.TreeNodeWidget)
 	for _, path := range cats[""] {
 		tree = append(tree, buildNode(cats, nodes, path))
 	}
