@@ -54,7 +54,15 @@ func SaveConfig(cfgPath string, config Config) error {
 		return err
 	}
 
-	cfgName := fmt.Sprintf("%s.json", config.Name)
+	// 'WSL - Sudo - NPM' turns into 'wsl_sudo_npm'
+	name :=
+		strings.ReplaceAll(
+			strings.ReplaceAll(
+				strings.ToLower(config.Name),
+				" ", ""),
+			"-", "_")
+
+	cfgName := fmt.Sprintf("%s.json", name)
 	cfgFile := filepath.Join(cfgPath, cfgName)
 	err = os.WriteFile(cfgFile, data, 0666)
 	return err
