@@ -11,6 +11,8 @@ import (
 	"github.com/Baipyrus/ProxySwitcher/util"
 )
 
+func editVariantView(variant *util.Variant) g.Widget {}
+
 func getConfigByName(cfgPath string, name string) *util.Config {
 	configs, _ := util.ReadConfigs(cfgPath)
 
@@ -41,30 +43,50 @@ func getConfigByName(cfgPath string, name string) *util.Config {
 func editConfigModal(cfgPath string, name string) g.Widget {
 	config := getConfigByName(cfgPath, name)
 
+	var setViews, unsetViews []g.Widget
+	for _, set := range config.Set {
+		setViews = append(setViews, editVariantView(set))
+	}
+	for _, unset := range config.Unset {
+		unsetViews = append(unsetViews, editVariantView(unset))
+	}
+
 	return g.PopupModal(fmt.Sprintf("Editing: %s", name)).Layout(
-		g.Row(
-			g.Label("Name:     "),
-			g.InputText(&config.Name),
-		),
-		g.Row(
-			g.Label("Command:  "),
-			g.InputText(&config.Cmd),
-		),
-		g.Row(
-			g.Label("Setters:  "),
-			g.Label(fmt.Sprintf("[%d entries]", len(config.Set))),
-		),
-		g.Row(
-			g.Label("Unsetters:"),
-			g.Label(fmt.Sprintf("[%d entries]", len(config.Unset))),
-		),
-		g.Align(g.AlignCenter).To(
-			g.Row(
-				g.Button("Save").OnClick(func() {
-					util.SaveConfig(cfgPath, *config)
-				}),
-				g.Button("Cancel").OnClick(func() { g.CloseCurrentPopup() }),
-			)),
+		append(
+			append(
+				append(
+					append(
+						[]g.Widget{
+							g.Row(
+								g.Label("Name:     "),
+								g.InputText(&config.Name),
+							),
+							g.Row(
+								g.Label("Command:  "),
+								g.InputText(&config.Cmd),
+							),
+							g.Row(
+								g.Label("Setters:  "),
+								g.Label(fmt.Sprintf("[%d entries]", len(config.Set))),
+							),
+						},
+						setViews...,
+					),
+					g.Row(
+						g.Label("Unsetters:"),
+						g.Label(fmt.Sprintf("[%d entries]", len(config.Unset))),
+					),
+				),
+				unsetViews...,
+			),
+			g.Align(g.AlignCenter).To(
+				g.Row(
+					g.Button("Save").OnClick(func() {
+						util.SaveConfig(cfgPath, *config)
+					}),
+					g.Button("Cancel").OnClick(func() { g.CloseCurrentPopup() }),
+				)),
+		)...,
 	).Flags(g.WindowFlagsAlwaysAutoResize)
 }
 
