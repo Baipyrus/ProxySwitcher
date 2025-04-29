@@ -11,7 +11,49 @@ import (
 	"github.com/Baipyrus/ProxySwitcher/util"
 )
 
-func editVariantView(variant *util.Variant) g.Widget {}
+func editVariantView(variant *util.Variant) g.Widget {
+	var (
+		types           = []string{"text", "variable"}
+		options         = []string{"no", "yes"}
+		typeSel, disSel int32
+		arguments       = strings.Join(variant.Arguments, " ")
+	)
+
+	return g.Child().Layout(
+		g.Row(
+			g.Label("Arguments:    "),
+			g.InputText(&arguments).
+				OnChange(func() {
+					variant.Arguments = strings.Split(arguments, " ")
+				}).
+				Size(180),
+		),
+		g.Row(
+			g.Label("Type:         "),
+			g.Combo("", types[typeSel], types, &typeSel).
+				OnChange(func() {
+					variant.Type = util.VariantType(types[typeSel])
+				}).
+				Size(180),
+		),
+		g.Row(
+			g.Label("Equator:      "),
+			g.InputText(&variant.Equator).Size(180),
+		),
+		g.Row(
+			g.Label("Surround:     "),
+			g.InputText(&variant.Surround).Size(180),
+		),
+		g.Row(
+			g.Label("Discard Proxy?"),
+			g.Combo("", options[disSel], options, &disSel).
+				OnChange(func() {
+					variant.DiscardProxy = disSel == 1
+				}).
+				Size(180),
+		),
+	).Size(-1, 140)
+}
 
 func getConfigByName(cfgPath string, name string) *util.Config {
 	configs, _ := util.ReadConfigs(cfgPath)
