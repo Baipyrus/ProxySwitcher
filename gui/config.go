@@ -11,9 +11,35 @@ import (
 	"github.com/Baipyrus/ProxySwitcher/util"
 )
 
-func editConfigModal(cfgPath string, name string) g.Widget {
+func getConfigByName(cfgPath string, name string) *util.Config {
 	configs, _ := util.ReadConfigs(cfgPath)
-	config := configs[0]
+
+	idx := slices.IndexFunc(
+		configs,
+		func(other *util.Config) bool {
+			ownName :=
+				strings.ReplaceAll(
+					strings.ReplaceAll(
+						strings.ToLower(name),
+						" ", ""),
+					"-", "_")
+
+			otherName :=
+				strings.ReplaceAll(
+					strings.ReplaceAll(
+						strings.ToLower(other.Name),
+						" ", ""),
+					"-", "_")
+
+			return ownName == otherName
+		},
+	)
+
+	return configs[idx]
+}
+
+func editConfigModal(cfgPath string, name string) g.Widget {
+	config := getConfigByName(cfgPath, name)
 
 	return g.PopupModal(fmt.Sprintf("Editing: %s", name)).Layout(
 		g.Row(
