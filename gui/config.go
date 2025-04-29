@@ -3,12 +3,44 @@
 package gui
 
 import (
+	"fmt"
 	"slices"
 	"strings"
 
 	g "github.com/AllenDang/giu"
 	"github.com/Baipyrus/ProxySwitcher/util"
 )
+
+func editConfigModal(cfgPath string, name string) g.Widget {
+	configs, _ := util.ReadConfigs(cfgPath)
+	config := configs[0]
+
+	return g.PopupModal(fmt.Sprintf("Editing: %s", name)).Layout(
+		g.Row(
+			g.Label("Name:     "),
+			g.InputText(&config.Name),
+		),
+		g.Row(
+			g.Label("Command:  "),
+			g.InputText(&config.Cmd),
+		),
+		g.Row(
+			g.Label("Setters:  "),
+			g.Label(fmt.Sprintf("[%d entries]", len(config.Set))),
+		),
+		g.Row(
+			g.Label("Unsetters:"),
+			g.Label(fmt.Sprintf("[%d entries]", len(config.Unset))),
+		),
+		g.Align(g.AlignCenter).To(
+			g.Row(
+				g.Button("Save").OnClick(func() {
+					util.SaveConfig(cfgPath, *config)
+				}),
+				g.Button("Cancel").OnClick(func() { g.CloseCurrentPopup() }),
+			)),
+	).Flags(g.WindowFlagsAlwaysAutoResize)
+}
 
 func configWindow(cfgPath string) {
 	var (
@@ -89,7 +121,7 @@ func parseCategories(cfgPath string) map[string][]string {
 	return cats
 }
 
-func buildNode(cats map[string][]string, nodes map[string]g.Widget, path string) g.Widget {
+func buildNode(cfgPath string, cats map[string][]string, nodes map[string]g.Widget, path string) g.Widget {
 	// Base case: Node already linked correctly
 	// SHOULD never occur for Proxy Switcher
 	if node, ok := nodes[path]; ok {
@@ -113,6 +145,7 @@ func buildNode(cats map[string][]string, nodes map[string]g.Widget, path string)
 		for _, child := range children {
 			// Prepend path to child name for recursion
 			childNodes = append(childNodes, buildNode(
+				cfgPath,
 				cats,
 				nodes,
 				path+" - "+child,
@@ -124,13 +157,17 @@ func buildNode(cats map[string][]string, nodes map[string]g.Widget, path string)
 	}
 
 	// If this is a leaf, create selectable element
-	node := g.
-		Tooltip("Double click to edit config").
-		To(g.
-			Selectable(name).
-			OnDClick(func() {
-			}),
-		)
+	node := g.Row(
+		g.
+			Tooltip("Double click to edit config").
+			To(g.
+				Selectable(name).
+				OnDClick(func() {
+					g.OpenPopup(fmt.Sprintf("Editing: %s", path))
+				}),
+			),
+		editConfigModal(cfgPath, path),
+	)
 	nodes[path] = node
 
 	return node
@@ -142,7 +179,7 @@ func generateTree(cfgPath string) (tree []g.Widget) {
 	// Map tree by recursively getting nodes from categories
 	nodes := make(map[string]g.Widget)
 	for _, path := range cats[""] {
-		tree = append(tree, buildNode(cats, nodes, path))
+		tree = append(tree, buildNode(cfgPath, cats, nodes, path))
 	}
 
 	return tree
