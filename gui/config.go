@@ -11,13 +11,31 @@ import (
 	"github.com/Baipyrus/ProxySwitcher/util"
 )
 
-func editVariantView(variant *util.Variant) g.Widget {
+func editVariantView(variant *util.Variant, isSetter bool) g.Widget {
 	var (
+		arguments       = strings.Join(variant.Arguments, " ")
 		types           = []string{"text", "variable"}
 		options         = []string{"no", "yes"}
+		disRow          g.Widget
+		height          float32 = 115
 		typeSel, disSel int32
-		arguments       = strings.Join(variant.Arguments, " ")
 	)
+
+	if variant.DiscardProxy {
+		disSel = 1
+	}
+
+	if isSetter {
+		disRow = g.Row(
+			g.Label("Discard Proxy?"),
+			g.Combo("", options[disSel], options, &disSel).
+				OnChange(func() {
+					variant.DiscardProxy = disSel == 1
+				}).
+				Size(180),
+		)
+		height += 25
+	}
 
 	return g.Child().Layout(
 		g.Row(
@@ -44,15 +62,8 @@ func editVariantView(variant *util.Variant) g.Widget {
 			g.Label("Surround:     "),
 			g.InputText(&variant.Surround).Size(180),
 		),
-		g.Row(
-			g.Label("Discard Proxy?"),
-			g.Combo("", options[disSel], options, &disSel).
-				OnChange(func() {
-					variant.DiscardProxy = disSel == 1
-				}).
-				Size(180),
-		),
-	).Size(-1, 140)
+		disRow,
+	).Size(-1, height)
 }
 
 func getConfigByName(cfgPath string, name string) *util.Config {
@@ -87,10 +98,10 @@ func editConfigModal(cfgPath string, name string) g.Widget {
 
 	var setViews, unsetViews []g.Widget
 	for _, set := range config.Set {
-		setViews = append(setViews, editVariantView(set))
+		setViews = append(setViews, editVariantView(set, true))
 	}
 	for _, unset := range config.Unset {
-		unsetViews = append(unsetViews, editVariantView(unset))
+		unsetViews = append(unsetViews, editVariantView(unset, false))
 	}
 
 	return g.PopupModal(fmt.Sprintf("Editing: %s", name)).Layout(
@@ -148,15 +159,21 @@ func configWindow(cfgPath string) {
 				),
 				g.Row(
 					g.Label("Protocol:"),
-					g.Combo("", protocols[selection], protocols, &selection),
+					g.
+						Combo("", protocols[selection], protocols, &selection).
+						Size(310),
 				),
 				g.Row(
 					g.Label("Host:    "),
-					g.InputText(&host),
+					g.
+						InputText(&host).
+						Size(310),
 				),
 				g.Row(
 					g.Label("Port:    "),
-					g.InputInt(&port),
+					g.
+						InputInt(&port).
+						Size(310),
 				),
 				g.Align(g.AlignCenter).To(
 					g.Label("Configurations"),
@@ -267,7 +284,7 @@ func generateTree(cfgPath string) (tree []g.Widget) {
 
 func Config(cfgPath string) {
 	title := "Proxy Switcher - Config"
-	wnd := g.NewMasterWindow(title, 600, 400, 0)
+	wnd := g.NewMasterWindow(title, 400, 300, g.MasterWindowFlagsNotResizable)
 	wnd.Run(func() {
 		configWindow(cfgPath)
 	})
