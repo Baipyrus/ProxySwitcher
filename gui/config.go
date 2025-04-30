@@ -99,6 +99,9 @@ func getConfigByName(cfgPath string, name string) *util.Config {
 
 func editConfigModal(cfgPath string, name string) g.Widget {
 	config := getConfigByName(cfgPath, name)
+	if config == nil {
+		config = &util.Config{Name: name}
+	}
 
 	var setViews, unsetViews []g.Widget
 	for _, set := range config.Set {
@@ -157,33 +160,44 @@ func configWindow(cfgPath string) {
 
 	g.SingleWindow().Layout(
 		append(
-			[]g.Widget{
-				g.Align(g.AlignCenter).To(
-					g.Label("Proxy Server"),
-				),
+			append(
+				[]g.Widget{
+					g.Align(g.AlignCenter).To(
+						g.Label("Proxy Server"),
+					),
+					g.Row(
+						g.Label("Protocol:"),
+						g.
+							Combo("", protocols[selection], protocols, &selection).
+							Size(310),
+					),
+					g.Row(
+						g.Label("Host:    "),
+						g.
+							InputText(&host).
+							Size(310),
+					),
+					g.Row(
+						g.Label("Port:    "),
+						g.
+							InputInt(&port).
+							Size(310),
+					),
+					g.Align(g.AlignCenter).To(
+						g.Label("Configurations"),
+					),
+				},
+				generateTree(cfgPath)...,
+			),
+			g.Align(g.AlignCenter).To(
 				g.Row(
-					g.Label("Protocol:"),
-					g.
-						Combo("", protocols[selection], protocols, &selection).
-						Size(310),
+					g.Button("New Config").
+						OnClick(func() {
+							g.OpenPopup("Editing: [NEW CONFIG]")
+						}),
+					editConfigModal(cfgPath, "[NEW CONFIG]"),
 				),
-				g.Row(
-					g.Label("Host:    "),
-					g.
-						InputText(&host).
-						Size(310),
-				),
-				g.Row(
-					g.Label("Port:    "),
-					g.
-						InputInt(&port).
-						Size(310),
-				),
-				g.Align(g.AlignCenter).To(
-					g.Label("Configurations"),
-				),
-			},
-			generateTree(cfgPath)...,
+			),
 		)...,
 	)
 }
