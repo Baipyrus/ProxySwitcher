@@ -90,6 +90,10 @@ func getConfigByName(cfgPath string, name string) *util.Config {
 		},
 	)
 
+	if idx == -1 {
+		return nil
+	}
+
 	return configs[idx]
 }
 
