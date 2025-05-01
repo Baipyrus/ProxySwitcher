@@ -11,6 +11,13 @@ import (
 	"github.com/Baipyrus/ProxySwitcher/util"
 )
 
+var (
+	protocols         = []string{"http", "https"}
+	host              string
+	protocolSelection int32
+	port              int32
+)
+
 func editVariantView(variant *util.Variant, isSetter bool) g.Widget {
 	var (
 		variantArgs              = strings.Join(variant.Arguments, " ")
@@ -152,13 +159,6 @@ func editConfigModal(cfgPath string, name string) g.Widget {
 }
 
 func configWindow(cfgPath string) {
-	var (
-		protocols         = []string{"http", "https"}
-		protocolSelection int32
-		host      string
-		port      int32
-	)
-
 	g.SingleWindow().Layout(
 		append(
 			append(
