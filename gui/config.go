@@ -13,24 +13,25 @@ import (
 
 func editVariantView(variant *util.Variant, isSetter bool) g.Widget {
 	var (
-		arguments       = strings.Join(variant.Arguments, " ")
-		types           = []string{"text", "variable"}
-		options         = []string{"no", "yes"}
-		disRow          g.Widget
-		height          float32 = 115
-		typeSel, disSel int32
+		variantArgs              = strings.Join(variant.Arguments, " ")
+		variantTypes             = []string{"text", "variable"}
+		discardOpts              = []string{"no", "yes"}
+		height           float32 = 115
+		discardProxy     g.Widget
+		discardSelection int32
+		typeSelection    int32
 	)
 
 	if variant.DiscardProxy {
-		disSel = 1
+		discardSelection = 1
 	}
 
 	if isSetter {
-		disRow = g.Row(
+		discardProxy = g.Row(
 			g.Label("Discard Proxy?"),
-			g.Combo("", options[disSel], options, &disSel).
+			g.Combo("", discardOpts[discardSelection], discardOpts, &discardSelection).
 				OnChange(func() {
-					variant.DiscardProxy = disSel == 1
+					variant.DiscardProxy = discardSelection == 1
 				}).
 				Size(180),
 		)
@@ -40,17 +41,17 @@ func editVariantView(variant *util.Variant, isSetter bool) g.Widget {
 	return g.Child().Layout(
 		g.Row(
 			g.Label("Arguments:    "),
-			g.InputText(&arguments).
+			g.InputText(&variantArgs).
 				OnChange(func() {
-					variant.Arguments = strings.Split(arguments, " ")
+					variant.Arguments = strings.Split(variantArgs, " ")
 				}).
 				Size(180),
 		),
 		g.Row(
 			g.Label("Type:         "),
-			g.Combo("", types[typeSel], types, &typeSel).
+			g.Combo("", variantTypes[typeSelection], variantTypes, &typeSelection).
 				OnChange(func() {
-					variant.Type = util.VariantType(types[typeSel])
+					variant.Type = util.VariantType(variantTypes[typeSelection])
 				}).
 				Size(180),
 		),
@@ -62,7 +63,7 @@ func editVariantView(variant *util.Variant, isSetter bool) g.Widget {
 			g.Label("Surround:     "),
 			g.InputText(&variant.Surround).Size(180),
 		),
-		disRow,
+		discardProxy,
 	).Size(-1, height)
 }
 
@@ -152,8 +153,8 @@ func editConfigModal(cfgPath string, name string) g.Widget {
 
 func configWindow(cfgPath string) {
 	var (
-		protocols = []string{"http", "https"}
-		selection int32
+		protocols         = []string{"http", "https"}
+		protocolSelection int32
 		host      string
 		port      int32
 	)
@@ -168,7 +169,7 @@ func configWindow(cfgPath string) {
 					g.Row(
 						g.Label("Protocol:"),
 						g.
-							Combo("", protocols[selection], protocols, &selection).
+							Combo("", protocols[protocolSelection], protocols, &protocolSelection).
 							Size(310),
 					),
 					g.Row(
