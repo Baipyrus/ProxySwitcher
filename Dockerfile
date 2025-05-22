@@ -21,3 +21,16 @@ RUN $GO mod download -x
 
 ENV CGO_ENABLED 1
 CMD $GO build -v -o build/
+
+
+FROM linux AS windows
+
+RUN apt-get update && apt-get install -y \
+    gcc-mingw-w64 g++-mingw-w64
+
+ENV GOOS windows
+ENV GOARCH amd64
+ENV CC "x86_64-w64-mingw32-gcc"
+ENV CXX "x86_64-w64-mingw32-g++"
+
+CMD $GO build -ldflags "-s -w -H=windowsgui -extldflags=-static" -p 4 -v -o build/
