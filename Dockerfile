@@ -1,4 +1,4 @@
-FROM ubuntu:latest AS linux
+FROM ubuntu:plucky AS linux
 
 WORKDIR /app
 COPY . .
@@ -25,12 +25,12 @@ CMD $GO build -v -o build/
 
 FROM linux AS windows
 
-RUN apt-get update && apt-get install -y \
-    gcc-mingw-w64 g++-mingw-w64
+# TODO: RUN # install mingw-w64 tools
+RUN apt-get update && apt-get install -y mingw-w64
 
 ENV GOOS windows
 ENV GOARCH amd64
 ENV CC "x86_64-w64-mingw32-gcc"
 ENV CXX "x86_64-w64-mingw32-g++"
 
-CMD $GO build -ldflags "-s -w -H=windowsgui -extldflags=-static" -p 4 -v -o build/
+CMD $GO build -v -o build/
