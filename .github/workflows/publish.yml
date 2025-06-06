@@ -12,17 +12,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: archlinux:latest
 
     env:
       GOOS: windows
       GOARCH: amd64
-      LD_PRELOAD: ''
       CGO_ENABLED: 1
       CC: x86_64-w64-mingw32-gcc
       CXX: x86_64-w64-mingw32-g++
-      CGO_CFLAGS: "-I/mingw64/include"
 
     steps:
       - name: Checkout repository
@@ -38,10 +34,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pacman -Syu --noconfirm \
-            go mingw-w64-gcc \
-            mingw-w64-winpthreads \
-            mingw-w64-headers
+          sudo apt-get update
+          sudo apt-get install -y mingw-w64
           go mod download
 
       - name: Build project
