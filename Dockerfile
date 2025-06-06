@@ -1,5 +1,3 @@
-# FROM fedora:42 AS linux
-# FROM ubuntu:plucky AS linux
 FROM ubuntu:noble AS linux
 
 WORKDIR /app
@@ -11,12 +9,6 @@ RUN apt-get update && apt-get install -y \
     libx11-dev libxcursor-dev \
     libxi-dev libglx-dev \
     golang gcc
-
-# RUN echo "proxy=$http_proxy" | sudo tee -a /etc/dnf/dnf.conf
-# RUN sudo dnf update -y && sudo dnf install -y \
-#     libX11-devel libXcursor-devel libXrandr-devel \
-#     libXinerama-devel libXi-devel libGL-devel \
-#     libXxf86vm-devel mingw64-gcc-c++ golang
 
 ENV GOBIN $GOROOT/bin
 ENV GO_VERSION 1.23.3
@@ -33,7 +25,6 @@ CMD $GO build -v -o build/
 
 FROM linux AS windows
 
-# TODO: RUN # install mingw-w64 tools
 RUN apt-get update && apt-get install -y mingw-w64
 
 ENV GOOS windows
