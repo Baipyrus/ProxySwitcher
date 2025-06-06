@@ -1,4 +1,4 @@
-FROM ubuntu:noble AS linux
+FROM ubuntu:24.04 AS linux
 
 WORKDIR /app
 COPY . .
