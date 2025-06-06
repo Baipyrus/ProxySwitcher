@@ -27,10 +27,7 @@ jobs:
     #   - https://gh.io/supported-runners-and-hardware-resources
     #   - https://gh.io/using-larger-runners (GitHub.com only)
     # Consider using larger runners or machines with greater resources for possible analysis time improvements.
-    runs-on: ubuntu-latest
-    container:
-      image: archlinux:latest
-
+    runs-on: ubuntu-24.04
     permissions:
       # required for all workflows
       security-events: write
@@ -70,14 +67,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Get GoLang version
-      run: sed -En 's/^go (.*)$/GO_VERSION=\1/p' go.mod >> $GITHUB_ENV
-
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: "${{ env.GO_VERSION }}"
-
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
@@ -102,10 +91,8 @@ jobs:
       shell: bash
       run: |
         # Install dependencies
-        pacman -Syu --noconfirm \
-          go mingw-w64-gcc \
-          mingw-w64-winpthreads \
-          mingw-w64-headers
+        sudo apt-get update
+        sudo apt-get install -y mingw-w64
         go mod download
         # Build Project
         go build -v -o build/
