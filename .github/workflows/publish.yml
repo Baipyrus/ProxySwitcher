@@ -14,11 +14,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     env:
-      GOOS: windows
-      GOARCH: amd64
       CGO_ENABLED: 1
-      CC: x86_64-w64-mingw32-gcc
-      CXX: x86_64-w64-mingw32-g++
 
     steps:
       - name: Checkout repository
@@ -35,19 +31,36 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y mingw-w64
-          go mod download
-
-      - name: Build project
-        run: go build -v -o build/
+          sudo apt-get install -y \
+            libgl1-mesa-dev libxxf86vm-dev \
+            libxrandr-dev libxinerama-dev \
+            libx11-dev libxcursor-dev \
+            libxi-dev libglx-dev \
+            mingw-w64 gcc tar
+          go mod download -x
 
       - name: Copying skripts and assets
         run: |
-          cp run.ps1 build/
-          cp install.ps1 build/
-          cp -r configs/ build/
-          mkdir -p build/assets/
-          cp -r assets/*.ico build/assets/
+          mkdir -p build/common
+          mkdir -p build/linux
+          mkdir -p build/windows
+
+          cp run.ps1 build/common/
+          cp install.ps1 build/common/
+          cp -r configs/ build/common/
+          mkdir -p build/common/assets/
+          cp -r assets/*.ico build/common/assets/
+
+      - name: Build project for Linux
+        run: go build -v -o build/linux/
+
+      - name: Build project for Windows
+        env:
+          GOOS: windows
+          GOARCH: amd64
+          CC: x86_64-w64-mingw32-gcc
+          CXX: x86_64-w64-mingw32-g++
+        run: go build -v -o build/windows/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -71,8 +84,13 @@ jobs:
 
       - name: Zip artifacts for release
         run: |
-          cd artifacts/
-          zip -r ../ProxySwitcher.zip *
+          cd artifacts/linux/
+          cp -r ../common/* .
+          tar -czf ../../ProxySwitcher-Linux-x86_64.tar.gz *
+
+          cd ../windows/
+          cp -r ../common/* .
+          zip -r ../../ProxySwitcher-Windows-x86_64.zip *
 
       - name: Create release
         env:
@@ -91,4 +109,5 @@ jobs:
           gh release create "$RELEASE_NAME" \
           --title "$TITLE" \
           "${FLAGS[@]}" \
-          ProxySwitcher.zip
+          ProxySwitcher-Linux-x86_64.tar.gz \
+          ProxySwitcher-Windows-x86_64.zip
