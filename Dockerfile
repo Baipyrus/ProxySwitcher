@@ -12,9 +12,9 @@ RUN apt-get update && apt-get install -y \
     golang gcc
 
 # Install specific go version
-ENV GOBIN $GOROOT/bin
-ENV GO_VERSION 1.23.3
-ENV GO $GOBIN/go$GO_VERSION
+ENV GOBIN=$GOROOT/bin
+ENV GO_VERSION=1.23.3
+ENV GO=$GOBIN/go$GO_VERSION
 
 RUN go install golang.org/dl/go$GO_VERSION@latest
 RUN $GO download
@@ -23,8 +23,8 @@ RUN $GO download
 RUN $GO mod download -x
 
 # Build for linux
-ENV CGO_ENABLED 1
-CMD $GO build -v -o build/linux/
+ENV CGO_ENABLED=1
+CMD ["bash", "-c", "$GO build -v -o build/linux/"]
 
 
 FROM linux AS windows
@@ -33,9 +33,9 @@ FROM linux AS windows
 RUN apt-get update && apt-get install -y mingw-w64
 
 # Build for windows
-ENV GOOS windows
-ENV GOARCH amd64
-ENV CC "x86_64-w64-mingw32-gcc"
-ENV CXX "x86_64-w64-mingw32-g++"
+ENV GOOS=windows
+ENV GOARCH=amd64
+ENV CC="x86_64-w64-mingw32-gcc"
+ENV CXX="x86_64-w64-mingw32-g++"
 
-CMD $GO build -v -o build/windows/
+CMD ["bash", "-c", "$GO build -v -o build/windows/"]
