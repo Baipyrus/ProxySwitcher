@@ -86,11 +86,11 @@ jobs:
         run: |
           cd artifacts/linux/
           cp -r ../common/* .
-          tar -czf ../ProxySwitcher-Linux-x86_64.tar.gz *
+          tar -czf ../../ProxySwitcher-Linux-x86_64.tar.gz *
 
           cd ../windows/
           cp -r ../common/* .
-          zip -r ../ProxySwitcher-Windows-x86_64.zip *
+          zip -r ../../ProxySwitcher-Windows-x86_64.zip *
 
       - name: Create release
         env:
