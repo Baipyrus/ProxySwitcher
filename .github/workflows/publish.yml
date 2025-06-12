@@ -85,9 +85,11 @@ jobs:
       - name: Zip artifacts for release
         run: |
           cd artifacts/linux/
-          zip -r ../ProxySwitcher-Linux-x86_64.zip *
+          cp -r ../common/* .
+          tar -czf ../ProxySwitcher-Linux-x86_64.tar.gz *
 
           cd ../windows/
+          cp -r ../common/* .
           zip -r ../ProxySwitcher-Windows-x86_64.zip *
 
       - name: Create release
@@ -107,4 +109,5 @@ jobs:
           gh release create "$RELEASE_NAME" \
           --title "$TITLE" \
           "${FLAGS[@]}" \
-          ProxySwitcher*
+          ProxySwitcher-Linux-x86_64.tar.gz \
+          ProxySwitcher-Windows-x86_64.zip
