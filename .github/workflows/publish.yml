@@ -36,7 +36,7 @@ jobs:
             libxrandr-dev libxinerama-dev \
             libx11-dev libxcursor-dev \
             libxi-dev libglx-dev \
-            mingw-w64 gcc
+            mingw-w64 gcc tar
           go mod download
 
       - name: Copying skripts and assets
