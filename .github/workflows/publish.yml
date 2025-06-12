@@ -14,11 +14,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     env:
-      GOOS: windows
-      GOARCH: amd64
       CGO_ENABLED: 1
-      CC: x86_64-w64-mingw32-gcc
-      CXX: x86_64-w64-mingw32-g++
 
     steps:
       - name: Checkout repository
@@ -35,25 +31,52 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y mingw-w64
+          sudo apt-get update && apt-get install -y \
+            libgl1-mesa-dev libxxf86vm-dev \
+            libxrandr-dev libxinerama-dev \
+            libx11-dev libxcursor-dev \
+            libxi-dev libglx-dev \
+            mingw-w64 gcc
           go mod download
-
-      - name: Build project
-        run: go build -v -o build/
 
       - name: Copying skripts and assets
         run: |
-          cp run.ps1 build/
-          cp install.ps1 build/
-          cp -r configs/ build/
-          mkdir -p build/assets/
-          cp -r assets/*.ico build/assets/
+          mkdir -p build/common
+          mkdir -p build/linux
+          mkdir -p build/windows
 
-      - name: Upload artifact
+          cp run.ps1 build/common/
+          cp install.ps1 build/common/
+          cp -r configs/ build/common/
+          mkdir -p build/common/assets/
+          cp -r assets/*.ico build/common/assets/
+
+      - name: Build project for Linux
+        run: |
+          go build -v -o build/linux/
+          cp -r build/common/* build/linux/
+
+      - name: Build project for Windows
+        env:
+          GOOS: windows
+          GOARCH: amd64
+          CC: x86_64-w64-mingw32-gcc
+          CXX: x86_64-w64-mingw32-g++
+        run: |
+          go build -v -o build/windows/
+          cp -r build/common/* build/windows/
+
+      - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ProxySwitcher
-          path: build/
+          name: ProxySwitcher-Linux-x86_64
+          path: build/linux/
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ProxySwitcher-Windows-x86_64
+          path: build/windows/
 
   release:
     runs-on: ubuntu-latest
