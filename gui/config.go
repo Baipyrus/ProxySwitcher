@@ -16,9 +16,11 @@ var (
 	host              string
 	protocolSelection int32
 	port              int32
+
+	windows map[string]bool
 )
 
-func editVariantView(variant *util.Variant, isSetter bool) g.Widget {
+func editVariant(variant *util.Variant, isSetter bool) g.Widget {
 	var (
 		variantArgs              = strings.Join(variant.Arguments, " ")
 		variantTypes             = []string{"text", "variable"}
@@ -105,7 +107,12 @@ func getConfigByName(cfgPath string, name string) *util.Config {
 	return configs[idx]
 }
 
-func editConfigModal(cfgPath string, name string) g.Widget {
+func editConfig(cfgPath string, name string) {
+	// Skip if window is not being displayed
+	if !windows[name] {
+		return
+	}
+
 	config := getConfigByName(cfgPath, name)
 	if config == nil {
 		config = &util.Config{Name: name}
@@ -113,13 +120,13 @@ func editConfigModal(cfgPath string, name string) g.Widget {
 
 	var setViews, unsetViews []g.Widget
 	for _, set := range config.Set {
-		setViews = append(setViews, editVariantView(set, true))
+		setViews = append(setViews, editVariant(set, true))
 	}
 	for _, unset := range config.Unset {
-		unsetViews = append(unsetViews, editVariantView(unset, false))
+		unsetViews = append(unsetViews, editVariant(unset, false))
 	}
 
-	return g.PopupModal(fmt.Sprintf("Editing: %s", name)).Layout(
+	g.Window(fmt.Sprintf("Editing: %s", name)).Layout(
 		append(
 			append(
 				append(
@@ -152,14 +159,16 @@ func editConfigModal(cfgPath string, name string) g.Widget {
 					g.Button("Save").OnClick(func() {
 						util.SaveConfig(cfgPath, *config)
 					}),
-					g.Button("Cancel").OnClick(func() { g.CloseCurrentPopup() }),
+					g.Button("Cancel").OnClick(func() {
+						windows[name] = false
+					}),
 				)),
 		)...,
-	).Flags(g.WindowFlagsAlwaysAutoResize)
+	)
 }
 
 func configWindow(cfgPath string) {
-	g.SingleWindow().Layout(
+	g.Window("Config").Layout(
 		append(
 			append(
 				[]g.Widget{
@@ -194,13 +203,13 @@ func configWindow(cfgPath string) {
 				g.Row(
 					g.Button("New Config").
 						OnClick(func() {
-							g.OpenPopup("Editing: [NEW CONFIG]")
+							windows["[NEW CONFIG]"] = true
 						}),
-					editConfigModal(cfgPath, "[NEW CONFIG]"),
 				),
 			),
 		)...,
 	)
+	editConfig(cfgPath, "[NEW CONFIG]")
 }
 
 func splitPath(path string) [][]string {
@@ -281,11 +290,11 @@ func buildNode(cfgPath string, cats map[string][]string, path string) g.Widget {
 			To(g.
 				Selectable(name).
 				OnDClick(func() {
-					g.OpenPopup(fmt.Sprintf("Editing: %s", path))
+					windows[path] = true
 				}),
 			),
-		editConfigModal(cfgPath, path),
 	)
+	editConfig(cfgPath, path)
 
 	return node
 }
@@ -302,8 +311,9 @@ func generateTree(cfgPath string) (tree []g.Widget) {
 }
 
 func Config(cfgPath string) {
-	title := "Proxy Switcher - Config"
-	wnd := g.NewMasterWindow(title, 400, 300, g.MasterWindowFlagsNotResizable)
+	windows = make(map[string]bool)
+
+	wnd := g.NewMasterWindow("Proxy Switcher", 400, 300, g.MasterWindowFlagsHidden)
 	wnd.Run(func() {
 		configWindow(cfgPath)
 	})
