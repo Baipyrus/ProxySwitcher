@@ -41,13 +41,7 @@ jobs:
 
     # Required build flags for this project
     env:
-      GOOS: windows
-      GOARCH: amd64
-      LD_PRELOAD: ''
       CGO_ENABLED: 1
-      CC: x86_64-w64-mingw32-gcc
-      CXX: x86_64-w64-mingw32-g++
-      CGO_CFLAGS: "-I/mingw64/include"
 
     strategy:
       fail-fast: false
@@ -91,8 +85,11 @@ jobs:
       shell: bash
       run: |
         # Install dependencies
-        sudo apt-get update
-        sudo apt-get install -y mingw-w64
+        sudo apt-get update && apt-get install -y \
+          libgl1-mesa-dev libxxf86vm-dev \
+          libxrandr-dev libxinerama-dev \
+          libx11-dev libxcursor-dev \
+          libxi-dev libglx-dev gcc
         go mod download
         # Build Project
         go build -v -o build/
