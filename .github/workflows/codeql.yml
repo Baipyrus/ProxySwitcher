@@ -91,7 +91,7 @@ jobs:
           libxrandr-dev libxinerama-dev \
           libx11-dev libxcursor-dev \
           libxi-dev libglx-dev gcc
-        go mod download
+        go mod download -x
         # Build Project
         go build -v -o build/
 

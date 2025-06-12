@@ -37,7 +37,7 @@ jobs:
             libx11-dev libxcursor-dev \
             libxi-dev libglx-dev \
             mingw-w64 gcc tar
-          go mod download
+          go mod download -x
 
       - name: Copying skripts and assets
         run: |
