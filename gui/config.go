@@ -12,11 +12,12 @@ var (
 	protocolSelection int32
 	port              int32
 
+	master  *g.MasterWindow
 	windows map[string]bool
 )
 
 func configWindow(cfgPath string) {
-	g.Window("Config").Layout(
+	g.SingleWindow().Layout(
 		append(
 			append(
 				[]g.Widget{
@@ -52,6 +53,7 @@ func configWindow(cfgPath string) {
 					g.Button("New Config").
 						OnClick(func() {
 							windows["[NEW CONFIG]"] = true
+							master.SetSize(485, 485)
 						}),
 				),
 			),
@@ -63,8 +65,8 @@ func configWindow(cfgPath string) {
 func Config(cfgPath string) {
 	windows = make(map[string]bool)
 
-	wnd := g.NewMasterWindow("Proxy Switcher", 400, 300, g.MasterWindowFlagsHidden)
-	wnd.Run(func() {
+	master = g.NewMasterWindow("Proxy Switcher - Config", 440, 340, 0)
+	master.Run(func() {
 		configWindow(cfgPath)
 	})
 }

@@ -1,3 +1,5 @@
+//go:build cgo
+
 package gui
 
 import (
@@ -26,7 +28,7 @@ func editConfig(cfgPath string, name string) {
 		unsetViews = append(unsetViews, editVariant(unset, false))
 	}
 
-	g.Window(fmt.Sprintf("Editing: %s", name)).Layout(
+	g.SingleWindow().Layout(
 		append(
 			append(
 				append(
@@ -61,6 +63,7 @@ func editConfig(cfgPath string, name string) {
 					}),
 					g.Button("Cancel").OnClick(func() {
 						windows[name] = false
+						master.SetSize(440, 340)
 					}),
 				)),
 		)...,

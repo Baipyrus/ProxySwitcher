@@ -1,3 +1,5 @@
+//go:build cgo
+
 package gui
 
 import (
@@ -41,6 +43,7 @@ func buildNode(cfgPath string, cats map[string][]string, path string) g.Widget {
 				Selectable(name).
 				OnDClick(func() {
 					windows[path] = true
+					master.SetSize(485, 485)
 				}),
 			),
 	)
