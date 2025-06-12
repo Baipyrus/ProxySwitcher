@@ -52,9 +52,7 @@ jobs:
           cp -r assets/*.ico build/common/assets/
 
       - name: Build project for Linux
-        run: |
-          go build -v -o build/linux/
-          cp -r build/common/* build/linux/
+        run: go build -v -o build/linux/
 
       - name: Build project for Windows
         env:
@@ -62,21 +60,13 @@ jobs:
           GOARCH: amd64
           CC: x86_64-w64-mingw32-gcc
           CXX: x86_64-w64-mingw32-g++
-        run: |
-          go build -v -o build/windows/
-          cp -r build/common/* build/windows/
+        run: go build -v -o build/windows/
 
-      - name: Upload Linux artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ProxySwitcher-Linux-x86_64
-          path: build/linux/
-
-      - name: Upload Windows artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ProxySwitcher-Windows-x86_64
-          path: build/windows/
+          name: ProxySwitcher
+          path: build/
 
   release:
     runs-on: ubuntu-latest
@@ -94,8 +84,11 @@ jobs:
 
       - name: Zip artifacts for release
         run: |
-          cd artifacts/
-          zip -r ../ProxySwitcher.zip *
+          cd artifacts/linux/
+          zip -r ../ProxySwitcher-Linux-x86_64.zip *
+
+          cd ../windows/
+          zip -r ../ProxySwitcher-Windows-x86_64.zip *
 
       - name: Create release
         env:
@@ -114,4 +107,4 @@ jobs:
           gh release create "$RELEASE_NAME" \
           --title "$TITLE" \
           "${FLAGS[@]}" \
-          ProxySwitcher.zip
+          ProxySwitcher*
