@@ -57,6 +57,9 @@ func editConfig(cfgPath string, name string) {
 							g.Row(
 								g.Label("Setters:"),
 								g.Label(fmt.Sprintf("[%d entries]", len(config.Set))),
+								g.Button("New").OnClick(func() {
+									config.Set = append(config.Set, &util.Variant{})
+								}),
 							),
 						},
 						setViews...,
@@ -64,6 +67,9 @@ func editConfig(cfgPath string, name string) {
 					g.Row(
 						g.Label("Unsetters:"),
 						g.Label(fmt.Sprintf("[%d entries]", len(config.Unset))),
+						g.Button("New").OnClick(func() {
+							config.Unset = append(config.Unset, &util.Variant{})
+						}),
 					),
 				),
 				unsetViews...,
