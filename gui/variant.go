@@ -24,6 +24,13 @@ func editVariant(variant *util.Variant, isSetter bool) g.Widget {
 		discardSelection = 1
 	}
 
+	switch variant.Type {
+	case util.TEXT:
+		typeSelection = 0
+	case util.VARIABLE:
+		typeSelection = 1
+	}
+
 	if isSetter {
 		discardProxy = g.Row(
 			g.Label("Discard Proxy?"),
