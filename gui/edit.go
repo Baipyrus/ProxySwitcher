@@ -35,15 +35,15 @@ func editConfig(cfgPath string, name string) {
 					append(
 						[]g.Widget{
 							g.Row(
-								g.Label("Name:     "),
+								g.Label("Name:"),
 								g.InputText(&config.Name),
 							),
 							g.Row(
-								g.Label("Command:  "),
+								g.Label("Command:"),
 								g.InputText(&config.Cmd),
 							),
 							g.Row(
-								g.Label("Setters:  "),
+								g.Label("Setters:"),
 								g.Label(fmt.Sprintf("[%d entries]", len(config.Set))),
 							),
 						},

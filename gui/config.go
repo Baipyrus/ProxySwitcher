@@ -31,13 +31,13 @@ func configWindow(cfgPath string) {
 							Size(310),
 					),
 					g.Row(
-						g.Label("Host:    "),
+						g.Label("Host:"),
 						g.
 							InputText(&host).
 							Size(310),
 					),
 					g.Row(
-						g.Label("Port:    "),
+						g.Label("Port:"),
 						g.
 							InputInt(&port).
 							Size(310),

@@ -38,7 +38,7 @@ func editVariant(variant *util.Variant, isSetter bool) g.Widget {
 
 	return g.Child().Layout(
 		g.Row(
-			g.Label("Arguments:    "),
+			g.Label("Arguments:"),
 			g.InputText(&variantArgs).
 				OnChange(func() {
 					variant.Arguments = strings.Split(variantArgs, " ")
@@ -46,7 +46,7 @@ func editVariant(variant *util.Variant, isSetter bool) g.Widget {
 				Size(180),
 		),
 		g.Row(
-			g.Label("Type:         "),
+			g.Label("Type:"),
 			g.Combo("", variantTypes[typeSelection], variantTypes, &typeSelection).
 				OnChange(func() {
 					variant.Type = util.VariantType(variantTypes[typeSelection])
@@ -54,11 +54,11 @@ func editVariant(variant *util.Variant, isSetter bool) g.Widget {
 				Size(180),
 		),
 		g.Row(
-			g.Label("Equator:      "),
+			g.Label("Equator:"),
 			g.InputText(&variant.Equator).Size(180),
 		),
 		g.Row(
-			g.Label("Surround:     "),
+			g.Label("Surround:"),
 			g.InputText(&variant.Surround).Size(180),
 		),
 		discardProxy,
