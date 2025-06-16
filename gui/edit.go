@@ -73,7 +73,7 @@ func editConfig(cfgPath string, name string) {
 					g.Button("Save").OnClick(func() {
 						util.SaveConfig(cfgPath, *config)
 					}),
-					g.Button("Cancel").OnClick(func() {
+					g.Button("Close").OnClick(func() {
 						windows[name] = false
 						master.SetSize(440, 340)
 					}),
