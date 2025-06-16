@@ -9,15 +9,27 @@ import (
 	"github.com/Baipyrus/ProxySwitcher/util"
 )
 
+var configs map[string]*util.Config
+
 func editConfig(cfgPath string, name string) {
+	if configs == nil {
+		configs = make(map[string]*util.Config)
+	}
+
 	// Skip if window is not being displayed
 	if !windows[name] {
 		return
 	}
 
-	config := getConfigByName(cfgPath, name)
+	// Cache configs during runtime
+	config := configs[name]
 	if config == nil {
-		config = &util.Config{Name: name}
+		config = getConfigByName(cfgPath, name)
+		if config == nil {
+			config = &util.Config{Name: name}
+		}
+
+		configs[name] = config
 	}
 
 	var setViews, unsetViews []g.Widget
