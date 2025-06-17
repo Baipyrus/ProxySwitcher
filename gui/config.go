@@ -100,7 +100,7 @@ func Config(cfgPath string) {
 
 guiWindow:
 	windows = make(map[string]bool)
-	master = g.NewMasterWindow("Proxy Switcher - Config", 440, 340, 0)
+	master = g.NewMasterWindow("Proxy Switcher - Config", 440, 345, 0)
 	master.Run(func() {
 		configWindow(cfgPath)
 	})

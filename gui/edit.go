@@ -81,7 +81,7 @@ func editConfig(cfgPath string, name string) {
 					}),
 					g.Button("Close").OnClick(func() {
 						windows[name] = false
-						master.SetSize(440, 340)
+						master.SetSize(440, 345)
 					}),
 				)),
 		)...,
