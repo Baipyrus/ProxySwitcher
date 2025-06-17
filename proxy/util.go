@@ -4,12 +4,49 @@ import (
 	"errors"
 	"fmt"
 	"path"
+	"regexp"
 	"slices"
 	"strings"
 
 	"github.com/Baipyrus/ProxySwitcher/util"
 	"gopkg.in/ini.v1"
 )
+
+func SplitProxyUrl(url string) (string, string, string) {
+	re := regexp.MustCompile(`^(\w+)://([^:/]+)(?::(\d+))?`)
+	matches := re.FindStringSubmatch(url)
+
+	protocol := matches[1]
+	host := matches[2]
+
+	var port string
+	if len(matches) == 4 {
+		port = matches[3]
+	} else {
+		switch protocol {
+		case "http":
+			port = "80"
+		case "https":
+			port = "443"
+		}
+	}
+
+	return protocol, host, port
+}
+
+func SaveProxy(cfgPath string, p *Proxy) {
+	cfg := ini.Empty()
+	section, _ := cfg.NewSection("")
+
+	protocol, host, port := SplitProxyUrl(p.Server)
+
+	section.NewKey("protocol", protocol)
+	section.NewKey("host", host)
+	section.NewKey("port", port)
+
+	proxyConf := path.Join(cfgPath, "proxy.conf")
+	cfg.SaveTo(proxyConf)
+}
 
 func allKeysExist[T comparable](have []T, want []T) bool {
 	for _, k := range want {

@@ -3,7 +3,9 @@
 package gui
 
 import (
+	"fmt"
 	g "github.com/AllenDang/giu"
+	"github.com/Baipyrus/ProxySwitcher/proxy"
 )
 
 var (
@@ -41,6 +43,18 @@ func configWindow(cfgPath string) {
 						g.
 							InputInt(&port).
 							Size(310),
+					),
+					g.Align(g.AlignCenter).To(
+						g.Button("Save").
+							OnClick(func() {
+								p := &proxy.Proxy{Server: fmt.Sprintf(
+									"%s://%s:%s",
+									protocols[protocolSelection],
+									host,
+									port,
+								)}
+								proxy.SaveProxy(cfgPath, p)
+							}),
 					),
 					g.Align(g.AlignCenter).To(
 						g.Label("Configurations"),
