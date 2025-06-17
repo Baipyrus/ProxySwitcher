@@ -42,13 +42,6 @@ $ctxDisable.Add_Click({
         Start-Process powershell.exe -WindowStyle Hidden -ArgumentList '-Command', '.\ProxySwitcher.exe unset'
     })
 
-# Add "Save Proxy Setting" menu item
-$ctxSave = New-Object System.Windows.Forms.ToolStripMenuItem
-$ctxSave.Text = 'Save New Config'
-$ctxSave.Add_Click({
-        Start-Process powershell.exe -ArgumentList '-Command', '.\ProxySwitcher.exe save'
-    })
-
 # Add "Exit" menu item
 $ctxExit = New-Object System.Windows.Forms.ToolStripMenuItem
 $ctxExit.Text = 'Exit'
