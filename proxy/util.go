@@ -12,6 +12,8 @@ import (
 	"gopkg.in/ini.v1"
 )
 
+const ConfigName = "proxy.ini"
+
 func SplitProxyUrl(url string) (string, string, string) {
 	re := regexp.MustCompile(`^(\w+)://([^:/]+)(?::(\d+))?`)
 	matches := re.FindStringSubmatch(url)
@@ -36,7 +38,7 @@ func SplitProxyUrl(url string) (string, string, string) {
 
 func SaveProxy(cfgPath string, p *Proxy) {
 	cfg := ini.Empty()
-	section, _ := cfg.NewSection("")
+	section, _ := cfg.NewSection("general")
 
 	protocol, host, port := SplitProxyUrl(p.Server)
 
@@ -44,7 +46,7 @@ func SaveProxy(cfgPath string, p *Proxy) {
 	section.NewKey("host", host)
 	section.NewKey("port", port)
 
-	proxyConf := path.Join(cfgPath, "proxy.conf")
+	proxyConf := path.Join(cfgPath, ConfigName)
 	cfg.SaveTo(proxyConf)
 }
 
@@ -60,13 +62,13 @@ func allKeysExist[T comparable](have []T, want []T) bool {
 func ReadProxy(cfgPath string) (*Proxy, error) {
 	proxy := &Proxy{}
 
-	proxyConf := path.Join(cfgPath, "proxy.conf")
+	proxyConf := path.Join(cfgPath, ConfigName)
 	cfg, err := ini.Load(proxyConf)
 	if err != nil {
 		return nil, err
 	}
 
-	section := cfg.Section("")
+	section := cfg.Section("general")
 	keys := section.KeyStrings()
 	if !allKeysExist(keys, []string{"protocol", "host", "port"}) {
 		return nil, errors.New("Proxy configuration is missing required entries!")
