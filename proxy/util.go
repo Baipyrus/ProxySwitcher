@@ -1,11 +1,49 @@
 package proxy
 
 import (
+	"errors"
 	"fmt"
+	"path"
+	"slices"
 	"strings"
 
 	"github.com/Baipyrus/ProxySwitcher/util"
+	"gopkg.in/ini.v1"
 )
+
+func allKeysExist[T comparable](have []T, want []T) bool {
+	for _, k := range want {
+		if !slices.Contains(have, k) {
+			return false
+		}
+	}
+	return true
+}
+
+func ReadProxy(cfgPath string) (*Proxy, error) {
+	proxy := &Proxy{}
+
+	proxyConf := path.Join(cfgPath, "proxy.conf")
+	cfg, err := ini.Load(proxyConf)
+	if err != nil {
+		return nil, err
+	}
+
+	section := cfg.Section("")
+	keys := section.KeyStrings()
+	if !allKeysExist(keys, []string{"protocol", "host", "port"}) {
+		return nil, errors.New("Proxy configuration is missing required entries!")
+	}
+
+	proxy.Server = fmt.Sprintf(
+		"%s://%s:%s",
+		section.Key("protocol").String(),
+		section.Key("host").String(),
+		section.Key("port").String(),
+	)
+
+	return proxy, nil
+}
 
 func processVars(cmd *util.Command, isVariableType bool) {
 	// If not a variable type, return early as there's nothing to replace

@@ -7,7 +7,7 @@ import (
 )
 
 func Unset(cfgPath string) {
-	proxy, _ := readSystemProxy()
+	proxy, _ := ReadProxy(cfgPath)
 	// Unset system proxy, if not already
 	if proxy.Enabled {
 		setProxyState(false)

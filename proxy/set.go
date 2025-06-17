@@ -7,7 +7,7 @@ import (
 )
 
 func Set(cfgPath string) {
-	proxy, _ := readSystemProxy()
+	proxy, _ := ReadProxy(cfgPath)
 	// Set system proxy, if not already
 	if !proxy.Enabled {
 		setProxyState(true)
