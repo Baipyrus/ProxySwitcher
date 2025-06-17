@@ -10,7 +10,7 @@ func Set(cfgPath string) {
 	proxy, _ := readSystemProxy()
 	// Set system proxy, if not already
 	if !proxy.Enabled {
-		setSystemProxy(true)
+		setProxyState(true)
 	}
 
 	var failed bool

@@ -5,10 +5,10 @@
 
 package proxy
 
-func readSystemProxy() (*Proxy, error) {
-	return &Proxy{}, nil
+func setSystemProxy(_ *Proxy) error {
+	return nil
 }
 
-func setSystemProxy(_ bool) error {
+func setProxyState(_ bool) error {
 	return nil
 }
