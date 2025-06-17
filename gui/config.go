@@ -4,6 +4,8 @@ package gui
 
 import (
 	"fmt"
+	"strconv"
+
 	g "github.com/AllenDang/giu"
 	"github.com/Baipyrus/ProxySwitcher/proxy"
 )
@@ -76,9 +78,28 @@ func configWindow(cfgPath string) {
 	editConfig(cfgPath, "[NEW CONFIG]")
 }
 
-func Config(cfgPath string) {
-	windows = make(map[string]bool)
+func readProxyParts(url string) {
+	protocol, h, p := proxy.SplitProxyUrl(url)
+	host = h
 
+	pInt, _ := strconv.ParseInt(p, 10, 32)
+	port = int32(pInt)
+
+	if protocol == "https" {
+		protocolSelection = 1
+	}
+}
+
+func Config(cfgPath string) {
+	p, err := proxy.ReadProxy(cfgPath)
+	if err != nil || p.Server == "" {
+		goto guiWindow
+	}
+
+	readProxyParts(p.Server)
+
+guiWindow:
+	windows = make(map[string]bool)
 	master = g.NewMasterWindow("Proxy Switcher - Config", 440, 340, 0)
 	master.Run(func() {
 		configWindow(cfgPath)
