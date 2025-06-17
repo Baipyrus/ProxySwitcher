@@ -50,7 +50,7 @@ func configWindow(cfgPath string) {
 						g.Button("Save").
 							OnClick(func() {
 								p := &proxy.Proxy{Server: fmt.Sprintf(
-									"%s://%s:%s",
+									"%s://%s:%d",
 									protocols[protocolSelection],
 									host,
 									port,
