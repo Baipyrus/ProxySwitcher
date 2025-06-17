@@ -21,9 +21,9 @@ $contextMenu = New-Object System.Windows.Forms.ContextMenuStrip
 
 # Add "Open Internet Options" menu item
 $ctxProperties = New-Object System.Windows.Forms.ToolStripMenuItem
-$ctxProperties.Text = 'Properties'
+$ctxProperties.Text = 'Configuration'
 $ctxProperties.Add_Click({
-        Start-Process rundll32.exe -ArgumentList 'shell32.dll,Control_RunDLL', 'inetcpl.cpl,,4'
+        Start-Process powershell.exe -WindowStyle Hidden -ArgumentList '-Command', '.\ProxySwitcher.exe config'
     })
 
 # Add "Enable Proxy Setting" menu item
