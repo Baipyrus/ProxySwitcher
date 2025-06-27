@@ -4,7 +4,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/Baipyrus/ProxySwitcher/util"
+	"github.com/Baipyrus/ProxySwitcher/internal/util"
 )
 
 func getConfigByName(cfgPath string, name string) *util.Config {

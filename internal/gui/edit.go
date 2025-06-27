@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	g "github.com/AllenDang/giu"
-	"github.com/Baipyrus/ProxySwitcher/util"
+	"github.com/Baipyrus/ProxySwitcher/internal/util"
 )
 
 var configs map[string]*util.Config

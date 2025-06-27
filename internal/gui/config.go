@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	g "github.com/AllenDang/giu"
-	"github.com/Baipyrus/ProxySwitcher/proxy"
+	"github.com/Baipyrus/ProxySwitcher/internal/proxy"
 )
 
 var (

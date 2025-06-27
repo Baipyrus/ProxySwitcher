@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/Baipyrus/ProxySwitcher/util"
+	"github.com/Baipyrus/ProxySwitcher/internal/util"
 )
 
 func mapCmdsToStr(commands []*util.Command) string {

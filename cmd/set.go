@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/Baipyrus/ProxySwitcher/proxy"
+	"github.com/Baipyrus/ProxySwitcher/internal/proxy"
 	"github.com/spf13/cobra"
 )
 

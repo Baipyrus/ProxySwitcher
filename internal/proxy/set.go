@@ -3,7 +3,7 @@ package proxy
 import (
 	"log"
 
-	"github.com/Baipyrus/ProxySwitcher/util"
+	"github.com/Baipyrus/ProxySwitcher/internal/util"
 )
 
 func Set(cfgPath string) {

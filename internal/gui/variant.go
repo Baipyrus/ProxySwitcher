@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	g "github.com/AllenDang/giu"
-	"github.com/Baipyrus/ProxySwitcher/util"
+	"github.com/Baipyrus/ProxySwitcher/internal/util"
 )
 
 func editVariant(variant *util.Variant, isSetter bool) g.Widget {

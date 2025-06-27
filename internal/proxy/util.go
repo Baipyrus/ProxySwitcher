@@ -8,7 +8,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/Baipyrus/ProxySwitcher/util"
+	"github.com/Baipyrus/ProxySwitcher/internal/util"
 	"gopkg.in/ini.v1"
 )
 
