@@ -1,10 +1,11 @@
 package util
 
 type Config struct {
-	Name  string     `json:"name"`
-	Cmd   string     `json:"cmd"`
-	Set   []*Variant `json:"set,omitempty"`
-	Unset []*Variant `json:"unset,omitempty"`
+	Name     string     `json:"name"`
+	Cmd      string     `json:"cmd"`
+	Set      []*Variant `json:"set,omitempty"`
+	Unset    []*Variant `json:"unset,omitempty"`
+	filepath string     `json:"-"`
 }
 
 type VariantType string

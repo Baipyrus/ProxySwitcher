@@ -11,6 +11,10 @@ import (
 	"os"
 )
 
+func (c *Config) Delete() error {
+	return os.Remove(c.filepath)
+}
+
 func ReadConfigs(cfgPath string, examples bool) ([]*Config, error) {
 	var configs []*Config
 
@@ -41,6 +45,7 @@ func ReadConfigs(cfgPath string, examples bool) ([]*Config, error) {
 			return nil
 		}
 
+		config.filepath = path
 		configs = append(configs, config)
 		return nil
 	})
@@ -65,5 +70,6 @@ func SaveConfig(cfgPath string, config Config) error {
 	cfgName := fmt.Sprintf("%s.json", name)
 	cfgFile := filepath.Join(cfgPath, cfgName)
 	err = os.WriteFile(cfgFile, data, 0666)
+
 	return err
 }

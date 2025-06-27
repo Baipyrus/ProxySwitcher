@@ -77,11 +77,21 @@ func editConfig(cfgPath string, name string) {
 			g.Align(g.AlignCenter).To(
 				g.Row(
 					g.Button("Save").OnClick(func() {
+						config.Delete()
+						configs[name] = nil
 						util.SaveConfig(cfgPath, *config)
 					}),
 					g.Button("Close").OnClick(func() {
 						windows[name] = false
 						master.SetSize(440, 345)
+					}),
+					g.Button("Delete").OnClick(func() {
+						if name == "[NEW CONFIG]" {
+							return
+						}
+
+						configs[name] = nil
+						config.Delete()
 					}),
 				)),
 		)...,
