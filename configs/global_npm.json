@@ -1,6 +1,6 @@
 {
-    "name": "WSL - Sudo - NPM",
-    "cmd": "wsl sudo npm",
+    "name": "Global - NPM",
+    "cmd": "npm",
     "set": [
         {
             "args": [
@@ -9,7 +9,8 @@
                 "proxy"
             ],
             "equator": "="
-        }, {
+        },
+        {
             "args": [
                 "config",
                 "set",
@@ -25,7 +26,8 @@
                 "delete",
                 "proxy"
             ]
-        }, {
+        },
+        {
             "args": [
                 "config",
                 "delete",

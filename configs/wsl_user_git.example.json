@@ -1,6 +1,6 @@
 {
-    "name": "WSL - Sudo - Git",
-    "cmd": "wsl sudo git",
+    "name": "Example - WSL - User - Git",
+    "cmd": "wsl git",
     "set": [
         {
             "args": [
@@ -8,7 +8,8 @@
                 "--global",
                 "http.proxy"
             ]
-        }, {
+        },
+        {
             "args": [
                 "config",
                 "--global",
@@ -24,7 +25,8 @@
                 "--unset",
                 "http.proxy"
             ]
-        }, {
+        },
+        {
             "args": [
                 "config",
                 "--global",

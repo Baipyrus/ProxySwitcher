@@ -1,5 +1,5 @@
 {
-    "name": "WIN - Env",
+    "name": "Example - Windows - Env",
     "cmd": "[System.Environment]::SetEnvironmentVariable('$PRSW_ARG', $PRSW_ARG, 'User')",
     "set": [
         {
@@ -8,7 +8,8 @@
             ],
             "surround": "\"",
             "type": "variable"
-        }, {
+        },
+        {
             "args": [
                 "https_proxy"
             ],
@@ -23,7 +24,8 @@
                 "[NullString]::Value"
             ],
             "type": "variable"
-        }, {
+        },
+        {
             "args": [
                 "https_proxy",
                 "[NullString]::Value"

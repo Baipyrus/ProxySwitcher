@@ -1,6 +1,6 @@
 {
-    "name": "WIN - Pip",
-    "cmd": "pip",
+    "name": "Example - WSL - User - Pip",
+    "cmd": "wsl pip",
     "set": [
         {
             "args": [

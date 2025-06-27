@@ -1,0 +1,36 @@
+{
+    "name": "Example - WSL - Sudo - Env",
+    "cmd": "wsl sudo",
+    "set": [
+        {
+            "args": [
+                "tee",
+                "-a",
+                "/etc/environment",
+                "\"<<<\"",
+                "http_proxy"
+            ],
+            "equator": "="
+        },
+        {
+            "args": [
+                "tee",
+                "-a",
+                "/etc/environment",
+                "\"<<<\"",
+                "https_proxy"
+            ],
+            "equator": "="
+        }
+    ],
+    "unset": [
+        {
+            "args": [
+                "sed",
+                "-i",
+                "'''/^https\\?_proxy=.*$/d'''",
+                "/etc/environment"
+            ]
+        }
+    ]
+}

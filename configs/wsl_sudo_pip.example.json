@@ -1,5 +1,5 @@
 {
-    "name": "WSL - Sudo - Pip",
+    "name": "Example - WSL - Sudo - Pip",
     "cmd": "wsl sudo pip",
     "set": [
         {

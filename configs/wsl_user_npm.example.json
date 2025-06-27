@@ -1,5 +1,5 @@
 {
-    "name": "WSL - User - NPM",
+    "name": "Example - WSL - User - NPM",
     "cmd": "wsl npm",
     "set": [
         {
@@ -9,7 +9,8 @@
                 "proxy"
             ],
             "equator": "="
-        }, {
+        },
+        {
             "args": [
                 "config",
                 "set",
@@ -25,7 +26,8 @@
                 "delete",
                 "proxy"
             ]
-        }, {
+        },
+        {
             "args": [
                 "config",
                 "delete",

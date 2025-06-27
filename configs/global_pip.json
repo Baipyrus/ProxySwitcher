@@ -1,6 +1,6 @@
 {
-    "name": "WSL - User - Pip",
-    "cmd": "wsl pip",
+    "name": "Global - Pip",
+    "cmd": "pip",
     "set": [
         {
             "args": [

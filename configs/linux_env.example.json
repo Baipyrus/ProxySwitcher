@@ -1,6 +1,6 @@
 {
-    "name": "WSL - Sudo - Env",
-    "cmd": "wsl sudo",
+    "name": "Example - Linux - Env",
+    "cmd": "sudo",
     "set": [
         {
             "args": [
@@ -11,7 +11,8 @@
                 "http_proxy"
             ],
             "equator": "="
-        }, {
+        },
+        {
             "args": [
                 "tee",
                 "-a",

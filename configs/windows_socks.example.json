@@ -1,5 +1,5 @@
 {
-    "name": "SOCKS",
+    "name": "Example - Windows - SOCKS",
     "cmd": "[void] 'Toggle SOCKS v5'; $PRSW_ARG",
     "set": [
         {
