@@ -11,14 +11,14 @@ import (
 	"os"
 )
 
-func ReadConfigs(cfgPath string) ([]*Config, error) {
+func ReadConfigs(cfgPath string, examples bool) ([]*Config, error) {
 	var configs []*Config
 
 	err := filepath.Walk(cfgPath, func(path string, info fs.FileInfo, err error) error {
 		name := info.Name()
 		isExample := strings.HasSuffix(name, ".example.json")
 		notJson := !strings.HasSuffix(name, ".json")
-		if info.IsDir() || isExample || notJson {
+		if info.IsDir() || (isExample && !examples) || notJson {
 			return nil
 		}
 

@@ -44,7 +44,7 @@ func Debug(cfgPath string) {
 	fmt.Printf("Enabled: %t\n", proxy.Enabled)
 	fmt.Printf("Server: %s\n\n", proxyServer)
 
-	configs, err := util.ReadConfigs(cfgPath)
+	configs, err := util.ReadConfigs(cfgPath, false)
 	if err != nil {
 		log.Fatal(err)
 	}

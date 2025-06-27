@@ -14,7 +14,7 @@ func Unset(cfgPath string) {
 	}
 
 	var failed bool
-	configs, _ := util.ReadConfigs(cfgPath)
+	configs, _ := util.ReadConfigs(cfgPath, false)
 	for _, config := range configs {
 		configCmd := config.Name
 		// Use command instead of name, if given

@@ -8,7 +8,7 @@ import (
 )
 
 func getConfigByName(cfgPath string, name string) *util.Config {
-	configs, _ := util.ReadConfigs(cfgPath)
+	configs, _ := util.ReadConfigs(cfgPath, true)
 
 	idx := slices.IndexFunc(
 		configs,
@@ -56,7 +56,7 @@ func splitPath(path string) [][]string {
 func parseCategories(cfgPath string) map[string][]string {
 	// Read configs, split into categories based on name
 	cats := make(map[string][]string)
-	configs, _ := util.ReadConfigs(cfgPath)
+	configs, _ := util.ReadConfigs(cfgPath, true)
 
 	for _, cfg := range configs {
 		for _, levels := range splitPath(cfg.Name) {
