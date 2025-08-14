@@ -8,10 +8,10 @@ import (
 
 func Set(cfgPath string) {
 	proxy, _ := ReadProxy(cfgPath)
-	// Set system proxy, if not already
-	if !proxy.Enabled {
-		setProxyState(true)
-	}
+
+	// Set system proxy and toggle
+	setProxyState(true)
+	proxy.Enabled = true
 
 	var failed bool
 	configs, _ := util.ReadConfigs(cfgPath, false)
