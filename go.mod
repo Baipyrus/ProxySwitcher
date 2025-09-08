@@ -6,7 +6,7 @@ toolchain go1.23.6
 
 require (
 	github.com/AllenDang/giu v0.12.0
-	github.com/spf13/cobra v1.9.1
+	github.com/spf13/cobra v1.10.1
 	golang.org/x/sys v0.32.0
 )
 
@@ -20,7 +20,7 @@ require (
 	github.com/napsy/go-css v0.0.0-20221107082635-4ed403047a64 // indirect
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8 // indirect
 	github.com/sahilm/fuzzy v0.1.1 // indirect
-	github.com/spf13/pflag v1.0.6 // indirect
+	github.com/spf13/pflag v1.0.9 // indirect
 	golang.design/x/hotkey v0.4.1 // indirect
 	golang.design/x/mainthread v0.3.0 // indirect
 	golang.org/x/image v0.23.0 // indirect
