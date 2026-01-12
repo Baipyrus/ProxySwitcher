@@ -1,13 +1,11 @@
 module github.com/Baipyrus/ProxySwitcher
 
-go 1.23.3
-
-toolchain go1.23.6
+go 1.24.0
 
 require (
 	github.com/AllenDang/giu v0.12.0
 	github.com/spf13/cobra v1.9.1
-	golang.org/x/sys v0.32.0
+	golang.org/x/sys v0.40.0
 )
 
 require (
